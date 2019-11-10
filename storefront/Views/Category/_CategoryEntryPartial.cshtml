@@ -1,0 +1,14 @@
+﻿@using Model.Commerce.Product
+@model ICategory
+<li>
+    <a href="../CategoryProducts/Index/@Model.ExternalId">@Model.Name @Model.ExternalId</a>
+</li>
+@if (Model.Children != null)
+{
+<ul>
+    @foreach (var child in Model.Children)
+    {
+        @await Html.PartialAsync("_CategoryEntryPartial.cshtml", child)
+    }
+</ul>
+}

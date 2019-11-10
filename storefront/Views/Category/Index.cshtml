@@ -1,0 +1,10 @@
+﻿@using Model.Commerce.Product
+@model IList<ICategory>
+<h1>Index</h1>
+
+<ul>
+    @foreach (var cat in Model)
+    {
+        @await Html.PartialAsync("_CategoryEntryPartial.cshtml", cat)
+    }
+</ul>

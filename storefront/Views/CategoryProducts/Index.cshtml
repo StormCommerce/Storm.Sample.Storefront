@@ -1,0 +1,26 @@
+﻿@using  Model.Commerce.Product
+@model IProductList
+
+<p>Number of products: @Model.ProductCount</p>
+
+@foreach( var product in Model.Products )
+{
+    <p>
+        @product.Name @product.Manufacturer.Name<br />
+        @foreach( var variant in product.Variants)
+        {
+            <b>Artikel</b> <a href="../../Product/OneProduct/@variant.Url">@variant.PartNo @variant.VariantName</a> @variant.Price<br />
+        }
+    </p>
+}
+
+@{ 
+    int numberOfPages = Model.ProductCount / Model.PageSize +1;
+}
+
+@for( int pageno=1; pageno<=numberOfPages; pageno++)
+{
+    var style = pageno == Model.PageNumber ? "font-weight: bold;" : "";
+
+    <a href="?pageNumber=@pageno" style="@style">Sida @pageno</a>
+}

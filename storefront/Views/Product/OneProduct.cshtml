@@ -1,0 +1,13 @@
+﻿@using Model.Commerce.Product
+@model IProduct
+
+<p>
+    <h1>@Model.Name</h1>
+
+    @foreach( var item in Model.Variants)
+    {
+    <p>
+    Artikel @item.PartNo<br /> <a href="#" onclick="cart.addToCart('@item.PartNo',1)">Add to cart</a>
+    </p>
+}
+</p>

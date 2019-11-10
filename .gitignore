@@ -1,0 +1,8 @@
+.vs/
+integration.storm/bin/
+integration.storm/obj/
+Model.Commerce/obj/
+storefront/*.pfx
+storefront/bin/
+storefront/obj/
+*.user

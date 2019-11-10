@@ -1,0 +1,10 @@
+﻿Installing autorest
+-------------------
+
+npm install -g autorest
+
+Create the storm API client
+
+Download the swagger json file using your browser and certificate
+https://api.storm.io/api/1.1/swagger.svc/swagger.json
+
