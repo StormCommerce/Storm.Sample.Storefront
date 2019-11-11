@@ -28,5 +28,13 @@ namespace Storefront.Controllers
 
             return View(product);
         }
+
+        public IActionResult Show([FromRoute]string id)
+        {
+            var product = _productManager.FindByUrl(_sessionModel.CurrentUser, id);
+
+
+            return View(product);
+        }
     }
 }

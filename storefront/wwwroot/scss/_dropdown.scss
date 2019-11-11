@@ -1,0 +1,82 @@
+/*
+Dropdown menu style
+*/
+
+.open> .dropdown-menu{
+     z-index: 999999;
+}
+.dropdown-menu{
+    min-width: 200px;
+    background: #fff;
+    border:0px;
+    @include border-radius(5px);
+    padding:0px;
+    z-index: 999999;
+    >li>a{
+        color: rgba(0,0,0,0.8);
+        padding: 9px 20px;
+        text-transform:capitalize;
+        font-family:$title-font;
+        font-weight:400;
+        &:hover,&:focus{
+            background-color: transparent;
+            color: $primary-color;
+        }
+    }
+}
+.search-dropdown{
+    right: 0;
+    left: auto;
+    background: #fff;
+    min-width: 250px;
+    padding:20px;
+    >li{
+        float: none;
+        width: 100%;
+    }
+}
+/*!
+ * Yamm!3
+ * Yet another megamenu for Bootstrap 3
+ * 
+ * http://geedmo.github.com/yamm3
+ */
+.yamm .nav,
+.yamm .collapse,
+.yamm .dropup,
+.yamm .yamm-fw {
+    position: static;
+}
+
+.yamm .container {
+    position: relative;
+}
+.yamm-content{
+    position: relative;
+    overflow:hidden;
+    padding:15px 0px 6px;
+}
+.yamm .dropdown.yamm-fw .dropdown-menu {
+    left: 15px;
+    right: 15px;
+}
+.yamm-content h3.heading{
+    padding-left: 20px;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #333;
+    padding-top: 9px;
+}
+.mega-menu-list{
+    >li>a{
+        color: rgba(0,0,0,0.8);
+        padding: 9px 20px;
+        text-transform:capitalize;
+        font-family:$title-font;
+        &:hover,&:focus{
+            background-color: transparent;
+            color: $primary-color;
+        }
+    }
+}

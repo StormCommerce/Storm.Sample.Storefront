@@ -1,0 +1,141 @@
+﻿<div class="page-breadcrumb">
+    <div class="container">
+        <h4>Shopping cart</h4>
+    </div>
+</div>
+<div class="space-60"></div>
+<div class="container" id="cart">
+    <div class="table-responsive">
+        <table class="table table-bordered cart-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template v-for="row in info.items">
+                    <tr>
+                        <td class="item-thumb">
+                            <img v-bind:src="row.imageUrl+'?w=60&h=60'" alt="" width="90">
+                        </td>
+                        <td class="item-name">
+                            <h4><a href="#">{{ row.name }}</a></h4>
+                        </td>
+                        <td class="item-price">
+                            <h4>{{ row.priceInclVat }}</h4>
+                        </td>
+                        <td class="item-count" style="width: 120px">
+                            <div class="count-input">
+                                <a class="incr-btn" data-action="decrease" href="#" v-bind:onclick="'numberButton($(this),\''+row.partNo+'\')'">–</a>
+                                <input class="quantity" type="text" v-bind:id="row.partNo+'-quantity'"  v-bind:value="row.quantity">
+                                <a class="incr-btn" data-action="increase" href="#" v-bind:onclick="'numberButton($(this),\''+row.partNo+'\')'">+</a>
+                            </div>
+                        </td>
+                        <td class="item-remove">
+                            <a href="#" v-bind:onclick="'cartpage.removeFromCart(\''+row.partNo+'\')'"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                </template>
+                
+            </tbody>
+        </table>
+    </div><!--end cart table-->
+    <div class="space-10"></div>
+    <div class="row">
+        <div class="col-sm-6 margin-b-10">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Have a coupon code" aria-describedby="basic-addon2">
+                <a href="#" class="btn input-group-addon" id="basic-addon2">apply coupon</a>
+            </div>
+        </div>
+        <div class="col-sm-6 margin-b-10 text-right">
+            <a href="#" class="btn btn-dark btn-lg">Update Cart</a>
+        </div>
+    </div>
+    <hr>
+    <ul class="list-unstyled text-right cart-subtotal-list">
+        <li>
+            Subtotal
+            <span>{{ info.totalInclVat - info.shippingInclVat }}</span>
+        </li>
+        <li>
+            Shipping Charge
+            <span>{{ info.shippingInclVat }}</span>
+        </li>
+        <li>
+            Total
+            <span class="lead">{{ info.totalInclVat }}</span>
+        </li>
+    </ul> <hr>
+    <div class="text-right">
+        <a href="/Basket/Checkout" class="btn btn-dark btn-lg">checkout</a>
+    </div>
+</div>
+<div class="space-60"></div>
+
+@section scripts {
+    <script language="JavaScript">
+        var cartpage = new Vue({
+            el: '#cart',
+            data() {
+                return {
+                    info: null
+                }
+            },
+            mounted() {
+                axios
+                    .get('/Basket/Minicart')
+                    .then(response => (this.info = response.data))
+            },
+            methods: {
+                refresh: function () {
+                    axios
+                        .get('/Basket/Minicart')
+                        .then(response => (this.info = response.data))
+                },
+                addToCart: function (partNo, quantity) {
+                    axios
+                        .get('/Basket/AddToCart?partNo=' + partNo + '&quantity=' + quantity)
+                        .then(response => (this.info = response.data))
+                },
+                updateCart: function (partNo, quantity) {
+                    axios
+                        .get('/Basket/UpdateCart?partNo=' + partNo + '&quantity=' + quantity)
+                        .then(response => (this.info = response.data))
+                        .then(response => cart.refreshWithData(response))
+                },
+                removeFromCart: function (partNo) {
+                    axios
+                        .get('/Basket/RemoveFromCart?partNo=' + partNo)
+                        .then(response => (this.info = response.data))
+                        .then(response => cart.refreshWithData(response))
+                }
+            }
+        });
+
+        function numberButton(btn, partno) {
+            
+                var $button = $(btn);
+                var oldValue = $button.parent().find('.quantity').val();
+                $button.parent().find('.incr-btn[data-action="decrease"]').removeClass('inactive');
+                if ($button.data('action') == "increase") {
+                    var newVal = parseFloat(oldValue) + 1;
+                } else {
+                    // Don't allow decrementing below 1
+                    if (oldValue > 1) {
+                        var newVal = parseFloat(oldValue) - 1;
+                    } else {
+                        newVal = 1;
+                        $button.addClass('inactive');
+                    }
+                }
+            $button.parent().find('.quantity').val(newVal);
+
+            cartpage.updateCart(partno, newVal);
+        }
+    </script>
+}

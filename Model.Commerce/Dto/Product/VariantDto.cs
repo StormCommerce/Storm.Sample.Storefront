@@ -9,6 +9,7 @@ namespace Model.Commerce.Dto.Product
     {
         public string PartNo { get; set; }
         public string Url { get; set; }
+        public string ImageUrl { get; set; }
         
         public string VariantName { get; set; }
         public decimal? Price { get; set; }

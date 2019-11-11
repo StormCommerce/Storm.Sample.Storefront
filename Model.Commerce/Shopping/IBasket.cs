@@ -13,5 +13,6 @@ namespace Model.Commerce.Shopping
         decimal TotalInclVat { get; set; }
         decimal Shipping { get; set; }
         decimal ShippingInclVat { get; set; }
+        int NumberOfItems { get; set; }
     }
 }

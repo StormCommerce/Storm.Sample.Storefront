@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,18 +12,20 @@ namespace Integration.Storm.Managers
 {
     public class StormConnectionManager: IStormConnectionManager
     {
+        IConfiguration _configuration;
         private string CertFilename;
         private string CertPassword;
         private string StormBaseUrl;
 
-        public StormConnectionManager()
+        public StormConnectionManager(IConfiguration configuration)
         {
             /*
             _settingsManager = new StormSettingsManager();
             */
-            CertFilename = "PalysetStormAPI-SE.pfx";
-            CertPassword = "4711";
-            StormBaseUrl = "https://servicesstage.enferno.se/api/1.1/";
+            CertFilename = configuration["Storm:CertFilename"];
+            CertPassword = configuration["Storm:CertPassword"];
+            StormBaseUrl = configuration["Storm:ApiUrl"];
+            _configuration = configuration;
         }
 
         
@@ -32,10 +35,12 @@ namespace Integration.Storm.Managers
         {
             var handler = new HttpClientHandler();
 
-            var certFile = Path.Combine(Directory.GetCurrentDirectory(), this.CertFilename);
-            var certificate = new X509Certificate2(File.ReadAllBytes(certFile), this.CertPassword);
-            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            handler.ClientCertificates.Add(certificate);
+            if( !string.IsNullOrEmpty(  this.CertFilename) ) { 
+                var certFile = Path.Combine(Directory.GetCurrentDirectory(), this.CertFilename);
+                var certificate = new X509Certificate2(File.ReadAllBytes(certFile), this.CertPassword);
+                handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                handler.ClientCertificates.Add(certificate);
+            }
             handler.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
 
             using (var client = new HttpClient(handler))
@@ -107,14 +112,16 @@ namespace Integration.Storm.Managers
             if (!url.StartsWith("http"))
             {
                 finalUrl = StormBaseUrl + url;
-                if (!finalUrl.Contains("?"))
-                {
-                    finalUrl += "?format=json";
-                }
-                else
-                {
-                    finalUrl += "&format=json";
+                if( !finalUrl.Contains("format=json")) { 
+                    if (!finalUrl.Contains("?"))
+                    {
+                        finalUrl += "?format=json";
+                    }
+                    else
+                    {
+                        finalUrl += "&format=json";
 
+                    }
                 }
             }
             return finalUrl;

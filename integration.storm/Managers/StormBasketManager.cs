@@ -1,4 +1,5 @@
 ﻿using Integration.Storm.Model.Shopping;
+using Microsoft.Extensions.Configuration;
 using Model.Commerce.Customer;
 using Model.Commerce.Dto.Product;
 using Model.Commerce.Dto.Shopping;
@@ -14,11 +15,13 @@ namespace Integration.Storm.Managers
     {
         IStormConnectionManager _stormConnectionManager;
         IProductManager _productManager;
+        IConfiguration _configuration;
 
-        public StormBasketManager(IStormConnectionManager connectionManager, IProductManager productManager)
+        public StormBasketManager(IStormConnectionManager connectionManager, IProductManager productManager, IConfiguration configuration)
         {
             _stormConnectionManager = connectionManager;
             _productManager = productManager;
+            _configuration = configuration;
         }
 
         public IBasket AddItem(IUser currentUser, string basketId, string partNo, int quantity)
@@ -146,18 +149,25 @@ namespace Integration.Storm.Managers
             dto.Total = basket.Summary.Total.Amount;
             dto.TotalInclVat = basket.Summary.Total.Vat + dto.Total;
             dto.TotalVat = basket.Summary.Total.Vat;
+            dto.NumberOfItems = 0;
 
             foreach( var stormItem in basket.Items )
             {
+                if( stormItem.Type.HasValue && _configuration["Storm:ExcludeTypeFromBasket"].Contains(stormItem.Type.Value.ToString()))
+                {
+                    continue;
+                }
+
                 BasketItemDto itemdto = new BasketItemDto();
                 itemdto.ExternalId = stormItem.Id.ToString();
-                itemdto.ImageUrl = stormItem.ImageKey;
+                itemdto.ImageUrl = _configuration["Storm:ImagePrefix"] + stormItem.ImageKey;
                 itemdto.Name = stormItem.Name;
                 itemdto.PartNo = stormItem.PartNo;
                 itemdto.Quantity = Convert.ToInt32(stormItem.Quantity);
                 itemdto.Price = stormItem.PriceDisplay.Value;
                 itemdto.PricePrevious = stormItem.PriceOriginal;
                 itemdto.VatRate = stormItem.VatRate.Value;
+                dto.NumberOfItems += Convert.ToInt32(itemdto.Quantity);
 
                 dto.Items.Add(itemdto);
             }

@@ -13,5 +13,6 @@ namespace Model.Commerce.Product.InputModel
         List<IFilter> Filters { get; set; }
         int PageSize { get; set; }
         int PageNumber { get; set; }
+        string Query { get; set; }
     }
 }

@@ -5,22 +5,24 @@ using Model.Commerce.Product;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace Integration.Storm.Builder
 {
     public class ProductBuilder: IProductBuilder<StormProductItem, StormProduct>
     {
         IBuyableExtension _buyableExtension;
+        IConfiguration _configuration;
 
-        public ProductBuilder(IBuyableExtension buyableExtension)
+        public ProductBuilder(IBuyableExtension buyableExtension, IConfiguration configuration)
         {
             _buyableExtension = buyableExtension;
+            _configuration = configuration;
         }
 
 
         public IProduct BuildFromItem(StormProductItem stormProductItem)
         {
-
             var p = new ProductDto();
 
             p.Category = new CategoryDto();
@@ -34,7 +36,7 @@ namespace Integration.Storm.Builder
             p.Manufacturer.ImageUrl = stormProductItem.Manufacturer.LogoKey;
 
             p.ExternalId = stormProductItem.Id.ToString();
-            p.PrimaryImageUrl = stormProductItem.ImageKey;
+            p.PrimaryImageUrl = _configuration["Storm:ImagePrefix"] +  stormProductItem.ImageKey;
             p.ShortDescription = stormProductItem.SubDescription;
             p.Variants = new List<VariantDto>();
 
@@ -50,6 +52,7 @@ namespace Integration.Storm.Builder
             primaryVariant.VendorPartNo = stormProductItem.Manufacturer.PartNo;
             primaryVariant.VariantName = stormProductItem.VariantName ?? stormProductItem.Name;
             primaryVariant.Url = stormProductItem.VariantUniqueName ?? stormProductItem.UniqueName;
+            primaryVariant.ImageUrl = _configuration["Storm:ImagePrefix"] + (stormProductItem.VariantImageKey ?? stormProductItem.ImageKey);
 
             primaryVariant.AvailableToSell = 0.0M;
             if( stormProductItem.OnHand != null )
@@ -89,9 +92,28 @@ namespace Integration.Storm.Builder
             p.Manufacturer.ImageUrl = stormProduct.Manufacturer.LogoKey;
             
             p.ExternalId = stormProduct.Id.ToString();
-            p.PrimaryImageUrl = stormProduct.ImageKey;
+            p.PrimaryImageUrl = _configuration["Storm:ImagePrefix"] + stormProduct.ImageKey;
             p.ShortDescription = stormProduct.SubDescription;
+            p.Description = stormProduct.Description;
+
+            p.Values = new List<IAttributeValue>();
+            foreach( var parametric in stormProduct.Parametrics )
+            {
+                AttributeValueDto av = new AttributeValueDto();
+                av.Name = parametric.Name;
+                av.Code = parametric.Value2;
+                av.Value = parametric.Value;
+                av.ExternalId = parametric.Id.ToString();
+                av.Uom = parametric.Uom;
+                av.AttributeCode = parametric.ValueId.HasValue ? parametric.ValueId.Value.ToString() : string.Empty;
+                av.Hidden = parametric.IsHidden;
+                p.Values.Add(av);
+            }
+            
             p.Variants = new List<VariantDto>();
+
+
+
 
             if( stormProduct.Variants == null || stormProduct.Variants.Length == 0 ) { 
 
@@ -106,6 +128,7 @@ namespace Integration.Storm.Builder
                 primaryVariant.VatRate = stormProduct.VatRate;
                 primaryVariant.VendorPartNo = stormProduct.Manufacturer.PartNo;
                 primaryVariant.VariantName = stormProduct.Name;
+                primaryVariant.ImageUrl = _configuration["Storm:ImagePrefix"] + stormProduct.ImageKey;
 
                 primaryVariant.AvailableToSell = 0.0M;
                 if (stormProduct.OnHand != null)
@@ -142,6 +165,7 @@ namespace Integration.Storm.Builder
                     primaryVariant.VatRate = stormVariant.VatRate;
                     //primaryVariant.VendorPartNo = stormVariant.Manufacturer.PartNo;
                     primaryVariant.VariantName = stormVariant.VariantName;
+                    primaryVariant.ImageUrl = _configuration["Storm:ImagePrefix"] + stormVariant.ImageKey;
 
                     primaryVariant.AvailableToSell = 0.0M;
                     if (stormVariant.OnHand != null)

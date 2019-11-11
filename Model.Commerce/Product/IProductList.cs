@@ -8,8 +8,9 @@ namespace Model.Commerce.Product
     {
         int ProductCount { get; set; }
         int PageNumber { get; set; }
+        int NumberOfPages { get; }
         int PageSize { get; set; }
         IList<IProduct> Products { get; set; }
-
+        string CategoryId { get; set; }
     }
 }

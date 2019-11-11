@@ -1,0 +1,86 @@
+/*
+Sliders
+*/
+
+/*main slider*/
+.ms-timerbar{
+    bottom: auto;
+    top: 0;
+}
+.ms-skin-default .ms-time-bar{
+    border-top: 0px;
+    background: $primary-color;
+    background-color: $primary-color !important;
+    opacity: 0.5;
+}
+.full-width{
+    width: 100%;
+}
+
+.title1{
+    text-transform: capitalize;
+    font-weight: 700;
+    font-size: 60px;
+    line-height:70px;
+    letter-spacing:0px;
+    &.white-color{
+        color: #fff;
+    }
+}
+.sub-title2{
+    font-family: $theme-font;
+    font-size: 18px;
+    line-height: 24px;
+      &.white-color{
+        color: #fff;
+    }
+}
+
+/*testimonial**/
+.testimonials{
+    background: #333;
+    padding: 90px 0;
+}
+.testi-slider{
+    position: relative;
+    overflow: hidden;
+    p{
+        color: rgba(255,255,255,0.9);
+        font-size: 20px;
+        line-height: 32px;
+    }
+    h4{
+        color: #fff;
+        small{
+           color: rgba(255,255,255,0.7); 
+        }
+    }
+     &.owl-theme {
+        .owl-controls {
+            position:absolute;
+            left:0;
+            top:50%;
+            margin-top:-30px;
+            width:100%;
+            .owl-buttons div{
+                @include border-radius(0px);
+                background-color: $primary-color;
+                margin:0px;
+                padding: 0px;
+                width: 30px;
+                height: 60px;
+                line-height: 60px;
+                font-size: 30px;
+                color:#fff;
+                &.owl-prev{
+                    position: absolute;
+                    left: 0px;
+                }
+                &.owl-next{
+                    position: absolute;
+                    right: 0px;
+                }
+            }
+        }
+    }
+}

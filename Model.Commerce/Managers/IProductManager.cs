@@ -14,6 +14,7 @@ namespace Model.Commerce.Managers
         public IProduct FindByPartNo(IUser currentUser, string partNo);
         public IProduct FindByUrl(IUser currentUser, string url);
         public IProductList Query(IUser currentUser, string query);
+        public IList<IProductFilter> FindAllFilters(IUser currentUser, IProductListInputModel query);
 
     }
 }

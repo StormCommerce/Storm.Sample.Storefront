@@ -1,0 +1,65 @@
+/*
+Icon boxes
+*/
+.features{
+    padding: 40px 0;
+    background: #fff;
+    padding-bottom: 0px;
+}
+.icon-box-left{
+    margin-bottom:40px;
+    h4{
+        font-weight: 300;
+        text-transform: capitalize;
+        margin-bottom: 5px;
+    }
+    i{
+        float: left;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        text-align: center;
+        @include border-radius(50%);
+        @include transition(all 0.3s);
+        border: 1px solid $primary-color;
+        font-size: 40px;
+        margin-right: 20px;
+        color: $primary-color;
+    }
+    p{
+        margin: 0px;
+    }
+    &:hover{
+        i{
+            color: #fff;
+            background: $primary-color;
+            
+        }
+    }
+}
+.topic-box{
+    display: block;
+    color: #999;
+    h4{
+        margin-bottom: 5px;
+        text-transform: capitalize;
+    }
+    i{
+        margin-right: 20px;
+        color: $primary-color;
+        font-size: 40px;
+    }
+    &:hover{
+        h4{
+            color:  $primary-color;
+        }
+    }
+}
+.contact-icons{
+    i{
+        margin-right: 20px;
+    }
+    p{
+        margin: 0px;
+    }
+}

@@ -8,6 +8,8 @@ namespace Model.Commerce.Product
     {
         string PartNo { get; set; }
         string VariantName { get; set; }
+        string ImageUrl { get; set; }
+
         decimal? Price { get; set; }
         decimal? VatRate { get; set; }
         decimal? PreviousPrice { get; set; }

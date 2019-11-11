@@ -1,0 +1,142 @@
+﻿@using  Model.Commerce.Product
+@model IProductList
+ <!--page header-->
+<div class="page-breadcrumb margin-b-60">
+    <div class="container">
+        <h4>Shop 4 columns</h4>
+    </div>
+</div>
+<!--page header-->
+<div class="container">
+    <div class="clearfix margin-b-30">
+        <div class="pull-right">
+            <a href="#" class="btn btn-primary btn-lg"><i class="fa fa-th"></i> Grid</a>
+            <a href="#" class="btn btn-default btn-lg"><i class="fa fa-list"></i> List</a>
+        </div>
+        <div class="pull-left">
+            <a class="btn btn-dark btn-lg" role="button" data-toggle="collapse" href="#filter-collapse" aria-expanded="false" aria-controls="filter-collapse">
+                <i class="fa fa-filter"></i>  Filter
+            </a>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <!--filter row-->
+    <div class="collapse" id="filter-collapse">
+
+        <div class="row filter-row">
+            <template v-for="filter in filters">
+                <div class="col-sm-6 col-md-3 margin-b-30">
+                    <h4>{{ filter.name }}</h4>
+                    <ul class="list-unstyled">
+                        <template v-for="item in filter.items">
+                            <li class="clearfix">
+                                <span class="pull-right">({{ item.count }})</span>
+                                <a href="#">{{ item.name }}</a>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+        </div>
+    </div> <!--/filter row-->
+</div><!--shop filter container-->
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div id="products">
+                <div class="row">
+                    <template v-for="product in productlist.products">
+                        <div class="col-sm-6 col-md-3" style="height: 400px;">
+                            <div class="product-box">
+                                <div class="product-thumb" style="width: 250px; height: 250px;">
+                                    <img v-bind:src="product.primaryImageUrl+'?w=250&h=250'" alt="" class="img-responsive">
+                                    <div class="product-overlay">
+                                        <span>
+                                            <a class="btn btn-default" v-bind:href="'/Product/Show/'+product.primaryVariant.url">View Detail</a>
+                                            <a class="btn btn-primary" href="#" v-bind:onclick="'cart.addToCart(\''+product.primaryVariant.partNo+'\',1)'">Add to cart</a>
+                                        </span>
+                                    </div>
+                                </div><!--/product-thumb-->
+                                <div class="product-desc">
+                                    <span class="product-price pull-right">{{ product.primaryVariant.price*product.primaryVariant.vatRate }}</span>
+                                    <h5 class="product-name"><a  v-bind:href="'/Product/Show/'+product.primaryVariant.url">{{ product.name }}</a></h5>
+                                </div><!--/product-desc-->
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="space-30"></div>
+                <nav aria-label="Page navigation" class="text-right margin-b-30">
+                    <ul class="pagination">
+                        <li>
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                        <template v-for="n in productlist.numberOfPages">
+                            <li xclass="active"><a href="#" v-bind:onclick="'productslist.page('+n+')'">{{ n }}</a></li>
+                        </template>
+                        <li>
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+
+    <script language="JavaScript">
+        var productslist = new Vue({
+            el: '#products',
+            data() {
+                return {
+                    productlist: null
+                }
+            },
+            mounted() {
+                axios
+                    .get('/CategoryProducts/Products/@Model.CategoryId')
+                    .then(response => (this.productlist = response.data))
+            },
+             methods: {
+                page: function (pageno) {
+                     axios
+                    .get('/CategoryProducts/Products/@Model.CategoryId?pageNumber='+pageno)
+                    .then(response => (this.productlist = response.data))
+                }
+            }
+
+        });
+
+
+        var filterslist = new Vue({
+            el: '#filter-collapse',
+            data() {
+                return {
+                    filters: null
+                }
+            },
+            mounted() {
+                axios
+                    .get('/CategoryProducts/Filters/@Model.CategoryId')
+                    .then(response => (this.filters = response.data))
+            }
+        });
+
+
+    </script>
+
+
+
+}

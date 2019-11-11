@@ -1,0 +1,45 @@
+/*
+Sidebar style
+*/
+.sidebar-widget{
+    h4{
+        text-transform: uppercase;
+         margin-bottom: 15px;
+         font-weight: 700;
+         font-size: 13px;
+    }
+    .list-unstyled{
+        >li>a{
+            color: #999;
+            padding: 4px 0;
+            &:hover{
+                color: $primary-color;
+            }
+        }
+    }
+}
+.recent-post li {
+  padding-bottom: 15px;
+}
+.recent-post img {
+  float: left;
+  margin-right: 15px;
+}
+.recent-post .post-content {
+  overflow: hidden;
+}
+.recent-post .post-content h5 {
+  margin-bottom: 0px;
+  font-weight: 400;
+  a{
+      color: #555;
+      &:hover{
+          color: $primary-color;
+      }
+  }
+}
+.recent-post span{
+    font-size: 12px;
+    display: block;
+    color: #999;
+}

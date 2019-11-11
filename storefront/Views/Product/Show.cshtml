@@ -1,0 +1,173 @@
+﻿@using Model.Commerce.Product
+@model IProduct
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-7 margin-b-40">
+                        <!-- master slider template -->
+                        <div class="ms-showcase2-template ms-showcase2-vertical">
+                            <!-- master slider -->
+                            <div class="master-slider ms-skin-default" id="masterslider">
+                                <div class="ms-slide">
+                                    <img src="plugins/masterslider/style/blank.gif" data-src="@Model.PrimaryVariant.ImageUrl?w=500&h=500" alt="lorem ipsum dolor sit" />
+                                    <img class="ms-thumb" src="@Model.PrimaryVariant.ImageUrl?w=100&h=100" alt="thumb" />
+                                </div><!--end slide-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="item-description">
+                            <h3>@Model.Name</h3>
+                            <span class="price text-primary">@(Model.PrimaryVariant.Price * Model.PrimaryVariant.VatRate)</span>
+                            <p>
+                                @Html.Raw(Model.ShortDescription)
+                            </p>
+                            <span class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-empty"></i>
+                            </span>
+                            <span>Availability: <em class="text-muted">@Model.PrimaryVariant.StockStatus</em></span>                            
+                            @if( Model.Variants.Count > 1 ) { 
+                                <ul class="variantslist">
+                                    @foreach( var variant in Model.Variants )
+                                    {
+                                        <li><img src="@variant.ImageUrl?w=40&h=40" /> @variant.PartNo @variant.VariantName </li>
+                                    }
+                                </ul>
+                            }
+                            <div class="count-input">
+                                <a class="incr-btn" data-action="decrease" href="#">–</a>
+                                <input class="quantity" id="quantity" type="text" value="1">
+                                <input type="hidden" id="partNo" value="@Model.PrimaryVariant.PartNo" />
+                                <a class="incr-btn" data-action="increase" href="#">+</a>
+                            </div>
+                            <a href="#" class="btn btn-dark btn-xl btn-block" onclick="cart.addToCart(document.getElementById('partNo').value,document.getElementById('quantity').value)">Add to cart</a>
+                            <a href="#" class="btn btn-default btn-xl btn-block" style="visibility: hidden;">Add to wishlist</a>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="space-20"></div>
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <div>
+
+                            <!-- Nav tabs -->
+                            <ul class="tabs-nav list-inline text-center" role="tablist">
+                                <li role="presentation" class="active"><a href="#desc" aria-controls="desc" role="tab" data-toggle="tab">Description</a></li>
+                                <li role="presentation"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Information</a></li>
+                                <li role="presentation"><a href="#review" aria-controls="review" role="tab" data-toggle="tab">Reviews <sup>2</sup></a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="desc">
+                                    <p>
+                                        @Html.Raw(Model.Description)
+                                    </p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="info">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            @foreach (var attributevalue in Model.Values)
+                                            {
+                                                <tr>
+                                                    <td><strong>@attributevalue.Name:</strong></td>
+                                                    <td>@attributevalue.Value</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="review">
+                                    <ul class="comments-list list-unstyled margin-b-50">
+                                        <li class="clearfix">
+                                            <img src="images/avtar.png" alt="" class="img-circle pull-left">
+                                            <div class="overflow-hidden">
+                                                <span class="pull-right rating">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star-half-empty"></i>
+                                                </span>
+                                                <h5>Mark Smith</h5>
+                                                <span>Nov. 12, 2016 at 11:15: AM</span>
+                                                <p>
+                                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="clearfix">
+                                            <img src="images/avtar.png" alt="" class="img-circle pull-left">
+                                            <div class="overflow-hidden">
+                                                <span class="pull-right rating">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star-half-empty"></i>
+                                                </span>
+                                                <h5>Mark Smith</h5>
+                                                <span>Nov. 12, 2016 at 11:15: AM</span>
+                                                <p>
+                                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <h4 class="margin-b-30">Add Review</h4>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <textarea class="form-control" rows="5" placeholder="Write Review here"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Name*">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Email*">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <input type="submit" class="btn btn-xl btn-dark" value="Submit">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--end tabs-->
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+                @section scripts {
+                    <script src="/plugins/masterslider/masterslider.min.js"></script>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            var slider = new MasterSlider();
+                            slider.control('scrollbar', { dir: 'h' });
+                            slider.control('thumblist', { autohide: false, dir: 'v', arrows: false, align: 'left', width: 127, height: 84, margin: 5, space: 5, hideUnder: 300 });
+                            slider.setup('masterslider', {
+                                width: 540,
+                                height: 586,
+                                space: 5
+                            });
+                        });
+
+                    </script>
+                }

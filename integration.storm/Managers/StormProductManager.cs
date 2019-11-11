@@ -1,4 +1,5 @@
 ﻿using Integration.Storm.Model.Product;
+using Microsoft.Extensions.Configuration;
 using Model.Commerce.Customer;
 using Model.Commerce.Dto.Product;
 using Model.Commerce.Extensions;
@@ -16,14 +17,18 @@ namespace Integration.Storm.Managers
         private IProductBuilder<StormProductItem, StormProduct> _productBuilder;
         private IBuyableExtension _buyableExtension;
         private IStormConnectionManager _connectionManager;
+        private IConfiguration _configuration;
 
         private int PageSize = 50;
 
-        public StormProductManager(IStormConnectionManager connectionManager,  IProductBuilder<StormProductItem,StormProduct> productBuilder, IBuyableExtension buyableExtension)
+        public StormProductManager(IStormConnectionManager connectionManager,  IProductBuilder<StormProductItem,StormProduct> productBuilder, IBuyableExtension buyableExtension, IConfiguration configuration)
         {
             _productBuilder = productBuilder;
             _buyableExtension = buyableExtension;
             _connectionManager = connectionManager;
+            _configuration = configuration;
+
+            PageSize = Convert.ToInt32(_configuration["Storm:DefaultPageSize"]);
         }
 
         public IProductList FindByCategory(IUser currentUser, IProductListInputModel query)
@@ -34,6 +39,8 @@ namespace Integration.Storm.Managers
 
             url += addUserUrlDetails(currentUser);
 
+            url += "&statusSeed=" + _configuration["Storm:StatusSeed"];
+
             if ( query.CategoryIds != null ) {
                 url += "&categorySeed=" + string.Join(",", query.CategoryIds);
             }
@@ -41,6 +48,10 @@ namespace Integration.Storm.Managers
             if( query.FlagIds != null )
             {
                 url += "&flagSeed=" + string.Join(",", query.FlagIds); 
+            }
+            if( !string.IsNullOrEmpty(query.Query))
+            {
+                url += "&searchString=" + System.Web.HttpUtility.UrlEncode(query.Query);
             }
 
             url += "&pageNo=" + (query.PageNumber > 0 ? query.PageNumber : 1);
@@ -82,6 +93,108 @@ namespace Integration.Storm.Managers
 
             return result;
         }
+
+        public IList<IProductFilter> FindAllFilters(IUser currentUser, IProductListInputModel query)
+        {
+            // Find the list of products
+            string url = "ProductService.svc/rest/ListProductFilters2?";
+
+            url += addUserUrlDetails(currentUser);
+
+            url += "&statusSeed=" + _configuration["Storm:StatusSeed"];
+
+            if (query.CategoryIds != null)
+            {
+                url += "&categorySeed=" + string.Join(",", query.CategoryIds);
+            }
+
+            if (query.FlagIds != null)
+            {
+                url += "&flagSeed=" + string.Join(",", query.FlagIds);
+            }
+            if (!string.IsNullOrEmpty(query.Query))
+            {
+                url += "&searchString=" + System.Web.HttpUtility.UrlEncode(query.Query);
+            }
+
+           
+            var filterList = _connectionManager.GetResult<List<StormFilter>>(url);
+
+            List<IProductFilter> result = new List<IProductFilter>();
+           
+            Dictionary<string, ProductDto> variants = new Dictionary<string, ProductDto>();
+            foreach ( var item in filterList )
+            {
+
+                var dto = new ProductFilterDto();
+
+                dto.Items = new List<IProductFilterItem>();
+                dto.Name = item.Type;
+                dto.Type = item.Name;
+
+                if( item.Name.Equals("parf"))
+                {
+                    foreach (var entry in item.Items)
+                    {
+                        dto = new ProductFilterDto();
+                        dto.Items = new List<IProductFilterItem>();
+                        dto.Name = entry.Name;
+                        dto.Type = entry.Id;
+                        if( entry.Items != null ) { 
+                            foreach( var valuef in entry.Items)
+                            {
+                                var dtoi = new ProductFilterItem();
+                                dtoi.Count = valuef.Count ?? 0;
+                                dtoi.Id = valuef.Id;
+                                dtoi.Name = valuef.Name;
+                                dtoi.Type = valuef.Type;
+                                dtoi.Value = valuef.Value;
+                                dto.Items.Add(dtoi);
+                            }
+                        } 
+                        else if( entry.FalseCount.HasValue )
+                        {
+                            var dtoi = new ProductFilterItem();
+                            dtoi.Count = entry.Count ?? 0;
+                            dtoi.Name = "True";
+                            dto.Items.Add(dtoi);
+
+                            dtoi = new ProductFilterItem();
+                            dtoi.Count = entry.FalseCount ?? 0;
+                            dtoi.Name = "False";
+                            dto.Items.Add(dtoi);
+                        }
+                        result.Add(dto);
+                    }
+
+                }
+                else if (item.Name.Equals("ohf"))
+                {
+                    result.Add(dto);
+                    var dtoi = new ProductFilterItem();
+                    dtoi.Count = item.Items[0].Count ?? 0;
+                    dtoi.Name = "Onhand";
+                    dto.Items.Add(dtoi);
+                }
+                else { 
+                    foreach( var entry in item.Items )
+                    {
+                        var dtoi = new ProductFilterItem();
+                        dtoi.Count = entry.Count??0;
+                        dtoi.Id = entry.Id;
+                        dtoi.Name = entry.Name;
+                        dtoi.Type = entry.Type;
+                        dtoi.Value = entry.Value;
+                        dto.Items.Add(dtoi);
+                    }
+                    result.Add(dto);
+                }
+
+            }
+
+            return result;
+        }
+
 
         public IProduct FindByPartNo(IUser currentUser, string partNo)
         {

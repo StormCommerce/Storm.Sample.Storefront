@@ -1,4 +1,5 @@
 ﻿using Integration.Storm.Model.Product.Category;
+using Microsoft.Extensions.Configuration;
 using Model.Commerce.Customer;
 using Model.Commerce.Dto.Product;
 using Model.Commerce.Managers;
@@ -13,10 +14,12 @@ namespace Integration.Storm.Managers
     {
 
         private IStormConnectionManager _stormConnectionManager;
+        private IConfiguration _configuration;
 
-        public StormCategoryManager(IStormConnectionManager stormConnectionManager)
+        public StormCategoryManager(IStormConnectionManager stormConnectionManager, IConfiguration configuration)
         {
             _stormConnectionManager = stormConnectionManager;
+            _configuration = configuration;
         }
 
         public IList<ICategory> FindAll(IUser currentUser)
@@ -37,10 +40,24 @@ namespace Integration.Storm.Managers
                 result.Add(stormcat.ToDto());
             }
 
-            return result;
+            return filterRootCategory(result);
         }
 
+        private IList<ICategory> filterRootCategory(IList<ICategory> source)
+        {
+            var rootCategoryId = _configuration["Storm:RootCategoryId"];
+            if (string.IsNullOrEmpty(rootCategoryId)) return source;
 
+            foreach( var cat in source )
+            {
+                if( rootCategoryId.Equals(cat.ExternalId))
+                {
+                    return cat.Children;
+                }
+            }
+
+            return source;
+        }
 
     }
 }

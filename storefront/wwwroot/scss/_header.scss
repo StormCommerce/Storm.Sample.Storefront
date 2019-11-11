@@ -1,0 +1,196 @@
+/*
+Template Header
+*/
+.navbar-nav>li>a{
+    font-weight: 500;
+    text-transform: capitalize;
+    font-size: 15px;
+    font-family: $title-font;
+}
+.navbar-default{
+    margin: 0px;
+    border: 0px;
+    border-bottom: 1px solid #eee;
+    background-color:#fff;
+    padding:10px 0;
+    .navbar-nav>li>a{
+        color: rgba(102,102,102,1);
+        @include transition(all .2s);
+        &:hover{
+            color: $primary-color !important;
+        }
+    }
+}
+.navbar-brand {
+    >img{
+        margin-top: -2px;
+    }
+}
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover,.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+    color: $primary-color !important;
+    background-color: transparent;
+}
+.right-icon-nav{
+    li{
+        float: left;
+        display: block;
+        padding:0px;
+        position:relative;
+        a{
+            display: block;
+            i{
+                font-size: 24px;
+                margin-top: -10px;
+                position: relative;
+                top: 8px;
+            }
+            .label{
+                position: absolute;
+                right: 10px;
+                top: 10px;
+            }
+        }
+    }
+}
+.search-form{
+    form{
+        position: relative;
+        button{
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 45px;
+            line-height: 45px;
+            border: 0px;
+            background-color:transparent;
+            color:#eee;
+            i{
+                display: block;        
+            }
+            &:hover,&:focus{
+                color: $primary-color;
+                outline: 0px;
+            }
+        }
+    }
+}
+.sticky-header{
+    width: 100%!important;
+    left: 0;
+    z-index: 999!important;
+}
+.is-sticky{
+    .navbar-default.sticky-header{
+        border-bottom: 1px solid #DFDFDF;
+        background: #F3F3F3;
+        background: rgba(255,255,255,0.9);
+        -webkit-transition: margin-top .5s ease-out;
+        transition: margin-top .5s ease-out;
+        -webkit-box-shadow: 0 0 3px #C3C3C3;
+        box-shadow: 0 0 3px #C3C3C3;
+    }  
+}
+
+/**offcanvas cart menu*/
+.navmenu-default{
+    background: #fff;
+    border: 0px;
+    box-shadow: 0px -3px 20px rgba(0,0,0,0.1);
+    z-index: 9999;
+}
+.cart-inner {
+  padding: 30px 20px;
+}
+.cart-inner h4 {
+  color: #555;
+  text-transform: capitalize;
+}
+.cart-inner hr {
+  border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+.cart-list li {
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.cart-list li:last-child {
+  border-bottom: 0px;
+}
+.cart-list li .btn {
+  margin: 5px;
+}
+.cart-list .cart-thumb {
+  float: left;
+  margin-right: 10px;
+}
+.cart-list .cart-content {
+  overflow: hidden;
+}
+.cart-list .cart-content h5{
+    margin: 3px;
+      font-weight: 400;
+  font-size: 14px;
+}
+.cart-list .cart-content h5 a{
+  color: #333;
+  &:hover{
+      color: #aeaeae;
+  }
+}
+.cart-list .cart-content .close {
+  color: #aeaeae;
+}
+.cart-list p .price {
+  color: $primary-color;
+  display: inline-block;
+  margin-right: 5px;
+  font-weight: 700;
+}
+
+/**transparent header**/
+.header-transparent{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    .navbar-default{
+        background: transparent;
+        border-bottom:0px;
+        .navbar-nav>li>a{
+            color: #fff;
+        }
+        .navbar-brand{
+            width: 150px;
+        }
+        .navbar-brand img{
+            position: absolute;
+        }
+         .navbar-brand img.logo-scroll{
+            opacity: 0;
+        }
+    }
+    .is-sticky{
+        .navbar-default{
+        background: rgba(255,255,255,0.9);
+         .navbar-nav>li>a{
+            color: #333;
+        }
+        .navbar-brand img.logo-scroll{
+            opacity: 1;
+        }
+    }
+}
+}
+@media(min-width:990px){
+    .navbar-center-logo{
+        padding:40px 0;
+    .navbar-brand{
+        position: absolute;
+        left: 50%;
+        top: 0;
+        margin-left: -46px!important;
+    }
+}
+}

@@ -21,6 +21,17 @@ namespace Storefront.Controllers
         }
 
 
+
+        public ActionResult Cart()
+        {
+            return View(GetCurrentBasket());
+        }
+
+        public ActionResult Checkout()
+        {
+            return View(GetCurrentBasket());
+        }
+
         public JsonResult Minicart()
         {
             return Json(GetCurrentBasket());

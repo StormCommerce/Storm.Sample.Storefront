@@ -1,0 +1,142 @@
+/*
+Buttons style
+*/
+
+.btn-link{
+    text-decoration: none;
+    color: #999;
+    letter-spacing: 9px;
+    padding: 0px 0px!important;
+}
+.btn{
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    border: 0px;
+    @include border-radius(0px);
+    font-family: $title-font;
+    &.btn-rounded{
+         @include border-radius(100px);
+    }
+}
+.btn{
+    padding: 10px 20px 10px;
+}
+.btn-lg{
+    padding: 14px 30px 14px;
+}
+.btn-xl{
+    padding: 16px 35px 16px;
+}
+
+.btn-xs{
+    padding: 6px 12px;
+}
+.btn-primary{
+    background: $primary-color;
+    color:#fff;
+    &:hover{
+        color: #fff;
+        background: #333;
+    }
+    &:focus{
+         background: $primary-color;
+    color:#fff;
+    }
+}
+.btn-default{
+    background: #eee;
+    color:#333;
+    &:hover{
+        color: #333;
+        background: #ddd;
+    }
+    &:focus{
+         background: #eee;
+    color:#333;
+    }
+}
+.btn-dark{
+    background: #333;
+    color:#fff;
+    &:hover{
+        color: #fff;
+        background: #111;
+    }
+    &:focus{
+         background: #333;
+    color:#fff;
+    }
+}
+.btn-google{
+    background: #d73d32;
+}
+ .btn-facebook {
+    background: #3b5998;
+}
+.btn-social{
+    color: #fff;
+    i{
+        margin-right: 10px;
+    }
+    &:hover{
+      color: #fff;
+      opacity:0.9;
+    }
+}
+.btn-default-border{
+    background: transparent;
+    border: 1px solid #eee;
+    color: #999;
+    &:hover{
+        background: #eee;
+        color: #999;
+    }
+    &:focus{
+         background: transparent;
+    border: 1px solid #eee;
+    color: #999;
+    }
+}
+.btn-dark-border{
+    background: transparent;
+    border: 1px solid #333;
+    color: #333;
+    &:hover{
+        background: #333;
+        color: #fff;
+    }
+    &:focus{
+         background: transparent;
+    border: 1px solid #333;
+    color: #333;
+    }
+}
+.btn-primary-border{
+    background: transparent;
+    border: 1px solid $primary-color;
+    color:  $primary-color;
+    &:hover{
+        background:  $primary-color;
+        color: #fff;
+    }
+    &:focus{
+         background: transparent;
+    border: 1px solid  $primary-color;
+    color:  $primary-color;
+    }
+}
+.btn-danger-border{
+    background: transparent;
+    border: 1px solid $danger-color;
+    color:  $danger-color;
+    &:hover{
+        background:  $danger-color;
+        color: #fff;
+    }
+    &:focus{
+         background: transparent;
+    border: 1px solid  $danger-color;
+    color:  $danger-color;
+    }
+}

@@ -1,0 +1,22 @@
+/*
+Tabs style
+*/
+.tabs-nav{
+    li{
+        padding:0px 15px;
+        padding-bottom:20px;
+        a{
+            display: block;
+            font-family: $title-font;
+            color:#999;
+            border-bottom: 1px solid transparent;
+        }
+        &.active{
+            a{
+                color: $primary-color;
+                border-color:  $primary-color;
+            }
+        }
+    }
+}
+
