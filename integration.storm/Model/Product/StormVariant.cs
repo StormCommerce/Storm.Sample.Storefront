@@ -45,22 +45,22 @@ namespace Integration.Storm.Model.Product
         public string Uom { get; set; }
         public decimal? UomCount { get; set; }
         public string EanCode { get; set; }
-        public int Type { get; set; }
-        public bool IsRecommendedQuantityFixed { get; set; }
+        public int? Type { get; set; }
+        public bool? IsRecommendedQuantityFixed { get; set; }
         public int? PopularityRank { get; set; }
-        public decimal CostPurchase { get; set; }
+        public decimal? CostPurchase { get; set; }
         public decimal? CostUnit { get; set; }
         public string Title { get; set; }
-        public decimal ActualWeight { get; set; }
+        public decimal? ActualWeight { get; set; }
         public bool IsDropShipOnly { get; set; }
         public string Synonyms { get; set; }
-        public bool IsSubscribable { get; set; }
+        public bool? IsSubscribable { get; set; }
         public string UnspscCode { get; set; }
         public decimal? PriceStandard { get; set; }
         public decimal? Width { get; set; }
         public decimal? Height { get; set; }
         public decimal? Depth { get; set; }
-        public bool IsDangerousGoods { get; set; }
+        public bool? IsDangerousGoods { get; set; }
     }
 
 

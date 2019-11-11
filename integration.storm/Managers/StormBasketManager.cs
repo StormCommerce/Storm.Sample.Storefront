@@ -167,6 +167,7 @@ namespace Integration.Storm.Managers
                 itemdto.Price = stormItem.PriceDisplay.Value;
                 itemdto.PricePrevious = stormItem.PriceOriginal;
                 itemdto.VatRate = stormItem.VatRate.Value;
+                itemdto.Url = stormItem.UniqueName;
                 dto.NumberOfItems += Convert.ToInt32(itemdto.Quantity);
 
                 dto.Items.Add(itemdto);

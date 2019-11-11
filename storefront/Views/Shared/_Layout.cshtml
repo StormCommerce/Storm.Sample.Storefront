@@ -145,7 +145,7 @@
                         </div>
                         <div class="cart-content">
                             <span v-bind:onclick="'cart.removeFromCart(\''+row.partNo+'\')'" class="close"><i class="fa fa-times"></i></span>
-                            <h5><a href="#">{{ row.name }}</a></h5>
+                            <h5><a v-bind:href="'/Product/Show/'+row.url">{{ row.name }}</a></h5>
                             <p><span class="price">{{ row.priceInclVat }}</span>  x {{ row.quantity }}</p>
                         </div>
                     </li>

@@ -15,5 +15,6 @@ namespace Model.Commerce.Dto.Shopping
         public decimal? PricePrevious { get; set; }
         public decimal VatRate { get; set; }
         public decimal Quantity { get; set; }
+        public string Url { get; set; }
     }
 }
