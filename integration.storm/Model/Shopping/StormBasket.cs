@@ -224,11 +224,11 @@ namespace Integration.Storm.Model.Shopping
 
     public class Productfilter
     {
-        public int ManufacturerId { get; set; }
+        public int? ManufacturerId { get; set; }
         public string CategorySeed { get; set; }
-        public int TypeId { get; set; }
-        public int ProductId { get; set; }
-        public int VariantProductId { get; set; }
+        public int? TypeId { get; set; }
+        public int? ProductId { get; set; }
+        public int? VariantProductId { get; set; }
         public string PartNo { get; set; }
         public int? PricelistId { get; set; }
         public int? FlagId { get; set; }

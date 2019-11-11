@@ -59,10 +59,13 @@ namespace Integration.Storm.Managers
         {
             var handler = new HttpClientHandler();
 
-            var certFile = Path.Combine(Directory.GetCurrentDirectory(), this.CertFilename);
-            var certificate = new X509Certificate2(File.ReadAllBytes(certFile), this.CertPassword);
-            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            handler.ClientCertificates.Add(certificate);
+            if (!string.IsNullOrEmpty(this.CertFilename))
+            {
+                var certFile = Path.Combine(Directory.GetCurrentDirectory(), this.CertFilename);
+                var certificate = new X509Certificate2(File.ReadAllBytes(certFile), this.CertPassword);
+                handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                handler.ClientCertificates.Add(certificate);
+            }
             handler.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
 
             using (var client = new HttpClient(handler))
@@ -88,10 +91,13 @@ namespace Integration.Storm.Managers
 
             var handler = new HttpClientHandler();
 
-            var certFile = Path.Combine(Directory.GetCurrentDirectory(), this.CertFilename);
-            var certificate = new X509Certificate2(File.ReadAllBytes(certFile), this.CertPassword);
-            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            handler.ClientCertificates.Add(certificate);
+            if (!string.IsNullOrEmpty(this.CertFilename))
+            {
+                var certFile = Path.Combine(Directory.GetCurrentDirectory(), this.CertFilename);
+                var certificate = new X509Certificate2(File.ReadAllBytes(certFile), this.CertPassword);
+                handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                handler.ClientCertificates.Add(certificate);
+            }
             handler.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
 
             using (var client = new HttpClient(handler))
