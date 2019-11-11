@@ -11,6 +11,7 @@ namespace Model.Commerce.Dto.Product
         public string Name { get; set; }
         public IManufacturer Manufacturer { get; set; }
         public ICategory Category { get; set; }
+        public List<IFile> Files { get; set; }
         public string ShortDescription { get; set; }
         public string Description { get; set; }
         public string PrimaryImageUrl { get; set; }

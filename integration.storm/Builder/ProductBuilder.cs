@@ -34,10 +34,15 @@ namespace Integration.Storm.Builder
             p.Manufacturer.Name = stormProductItem.Manufacturer.Name;
             p.Manufacturer.ExternalId = stormProductItem.Manufacturer.Id.ToString();
             p.Manufacturer.ImageUrl = stormProductItem.Manufacturer.LogoKey;
+            
 
             p.ExternalId = stormProductItem.Id.ToString();
             p.PrimaryImageUrl = _configuration["Storm:ImagePrefix"] +  stormProductItem.ImageKey;
             p.ShortDescription = stormProductItem.SubDescription;
+
+            p.Files = new List<IFile>();
+
+            
             p.Variants = new List<VariantDto>();
 
             var primaryVariant = new VariantDto();
@@ -95,6 +100,32 @@ namespace Integration.Storm.Builder
             p.PrimaryImageUrl = _configuration["Storm:ImagePrefix"] + stormProduct.ImageKey;
             p.ShortDescription = stormProduct.SubDescription;
             p.Description = stormProduct.Description;
+
+            p.Files = new List<IFile>();
+
+            // Add default image
+            FileDto primaryimagefile = new FileDto();
+            p.Files.Add(primaryimagefile);
+
+            primaryimagefile.ExternalId = stormProduct.ImageKey;
+            primaryimagefile.ImageUrl = _configuration["Storm:ImagePrefix"] + stormProduct.ImageKey;
+            primaryimagefile.Extension = "jpg";
+            primaryimagefile.Name = stormProduct.Image;
+
+            if ( stormProduct.Files != null )
+            {
+                foreach( var stormfile in stormProduct.Files  )
+                {
+                    FileDto filedto = new FileDto();
+                    p.Files.Add(filedto);
+
+                    filedto.ExternalId = stormfile.Key;
+                    filedto.ImageUrl = _configuration["Storm:ImagePrefix"] + stormfile.Key;
+                    filedto.Extension = stormfile.Extension;
+                    filedto.Name = stormfile.Name;
+                }
+            }
+
 
             p.Values = new List<IAttributeValue>();
             foreach( var parametric in stormProduct.Parametrics )

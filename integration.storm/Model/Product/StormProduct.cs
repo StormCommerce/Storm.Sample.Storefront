@@ -7,14 +7,14 @@ namespace Integration.Storm.Model.Product
 {
     public class StormProduct
     {
-    
+
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string PartNo { get; set; }
         public string SubHeader { get; set; }
         public StormManufacturer Manufacturer { get; set; }
-        public string Image { get; set; }       
+        public string Image { get; set; }
         public string FlagIdSeed { get; set; }
         public decimal? Price { get; set; }
         public decimal? PriceCatalog { get; set; }
@@ -50,6 +50,7 @@ namespace Integration.Storm.Model.Product
         public string EanCode { get; set; }
         public int Type { get; set; }
         public StormCategory[] Categories { get; set; }
+        public StormFile[] Files { get; set; }
         public bool IsRecommendedQuantityFixed { get; set; }
         public int? PopularityRank { get; set; }
         public decimal? CostPurchase { get; set; }
@@ -67,9 +68,22 @@ namespace Integration.Storm.Model.Product
         public bool IsDangerousGoods { get; set; }
     }
 
-   
 
-    
+
+    public class StormFile
+    {
+        public int? Id { get; set; }
+        public int? Type { get; set; }
+        public string Path { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Key { get; set; }
+        public string Extension { get; set; }
+        public string Code { get; set; }
+        public int? SortOrder { get; set; }
+    }
+
+
 
     /*public class Category
     {

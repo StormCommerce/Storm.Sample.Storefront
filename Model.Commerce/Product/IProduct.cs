@@ -16,5 +16,6 @@ namespace Model.Commerce.Product
         IVariant PrimaryVariant { get; set; }
         IList<IVariant> Variants { get; set; }
         IList<IAttributeValue> Values { get; set; }
+        List<IFile> Files { get; set; }
     }
 }
