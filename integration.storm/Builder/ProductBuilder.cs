@@ -1,4 +1,5 @@
-﻿using Integration.Storm.Model.Product;
+﻿
+using Integration.Storm.Model.Product;
 using Model.Commerce.Dto.Product;
 using Model.Commerce.Extensions;
 using Model.Commerce.Product;
@@ -7,6 +8,13 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 
+
+/******************************************************************************
+ ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
+ ** Purpose: Sample code for how to build an integration from a frontend
+ **          solution to communicate with Storm Commerce (storm.io)
+ ** Copyright (C) Jolix AB, Storm Commerce AB
+ ******************************************************************************/
 namespace Integration.Storm.Builder
 {
     public class ProductBuilder: IProductBuilder<StormProductItem, StormProduct>
