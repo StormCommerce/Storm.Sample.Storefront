@@ -6,3 +6,4 @@ storefront/*.pfx
 storefront/bin/
 storefront/obj/
 *.user
+Model.Commerce/bin/
