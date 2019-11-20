@@ -53,7 +53,8 @@ namespace Integration.Storm.Managers
 
             using (var client = new HttpClient(handler))
             {
-                var respone = client.GetAsync(new Uri(prepareUrl(url))).Result;
+                var fullUrl = prepareUrl(url);
+                var respone = client.GetAsync(new Uri(fullUrl)).Result;
                 var result = respone.Content.ReadAsStringAsync();
                 if (respone.IsSuccessStatusCode)
                 {

@@ -58,6 +58,7 @@ namespace storefront
             services.AddTransient<ICategoryManager, StormCategoryManager>();
             services.AddTransient<IBuyableExtension, DefaultBuyableExtension>();
             services.AddTransient<IBasketManager, StormBasketManager>();
+            services.AddTransient<IAccountManager, StormAccountManager>();
 
             // Local services
             services.AddScoped<ISessionModel, SessionModel>();

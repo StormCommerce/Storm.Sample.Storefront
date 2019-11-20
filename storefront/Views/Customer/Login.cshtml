@@ -1,0 +1,50 @@
+﻿<!--page start-->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 margin-b-60">
+            <div class="login-register-box">
+                <form class="margin-b-30">
+                    <div class="form-group">
+                        <i class="material-icons icon">email</i>
+                        <label class="sr-only" for="login-email">Email</label>
+                        <input id="login-email" name="username" type="email" class="form-control login-email" placeholder="Email">
+                    </div><!--//form-group-->
+                    <div class="form-group">
+                        <i class="material-icons icon">lock</i>
+                        <label class="sr-only" for="login-password">Password</label>
+                        <input id="login-password" name="password" type="password" class="form-control login-password" placeholder="Password">
+                        <div class="clearfix">
+                            <a href="#" class="pull-right forget-paddword">Forget Password?</a>
+                            <div class="checkbox remember pull-left">
+                                <label>
+                                    <input class="icheck" type="checkbox"> Remember me
+                                </label>
+                            </div>
+                        </div><!--/extra-->
+                    </div><!--/form-group-->
+                    <button type="button" class="btn btn-lg btn-block btn-primary" onclick="login(getElementById('login-email').value, getElementById('login-password').value)">Log in</button>
+                </form>
+                
+                <div>New customer? <a href="#">Register here</a></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--page end-->
+
+@section scripts  {
+
+
+    <script language="JavaScript">
+        function login(user, password) {
+            axios.post("/Customer/Login", { Username: user, Password: password })
+                .then(response => { console.log(response) })
+                 .catch(error => {
+                    console.log("----------ERROR------------");
+                    console.log(error);
+                });
+        }
+    </script>
+
+}

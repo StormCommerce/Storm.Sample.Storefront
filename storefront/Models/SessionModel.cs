@@ -9,6 +9,7 @@ using Model.Commerce.Dto.Customer;
 using Model.Commerce.Dto.Shopping;
 using Model.Commerce.Managers;
 using Model.Commerce.Shopping;
+using Newtonsoft.Json;
 
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
@@ -32,7 +33,15 @@ namespace Storefront.Models
         }
 
         public IUser CurrentUser {
-            get { 
+            get {
+                if (_currentUser != null) return _currentUser;
+
+                string userJson = _httpContextAccessor.HttpContext.Session.GetString("user");
+                if( !string.IsNullOrEmpty(userJson))
+                {
+                    _currentUser = JsonConvert.DeserializeObject<UserDto>(userJson);
+                }
+
                 if( _currentUser == null )
                 {
                     _currentUser = new UserDto();
@@ -46,6 +55,15 @@ namespace Storefront.Models
             set
             {
                 _currentUser = value;
+
+                if( value != null ) { 
+                    _httpContextAccessor.HttpContext.Session.SetString("user", JsonConvert.SerializeObject(value));
+                } 
+                else
+                {
+                    _httpContextAccessor.HttpContext.Session.Remove("user");
+                }
+
             }
         }
         public string CurrentBasketId {
