@@ -26,5 +26,6 @@ namespace Model.Commerce.Dto.Customer
         public string Address2 { get; set; }
         public string Zip { get; set; }
         public string City { get; set; }
+        public List<string> PriceLists { get; set; }
     }
 }

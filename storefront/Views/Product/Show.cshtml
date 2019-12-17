@@ -25,6 +25,9 @@
                         <div class="item-description">
                             <h3>@Model.Name</h3>
                             <span class="price text-primary">@(Model.PrimaryVariant.Price * Model.PrimaryVariant.VatRate)</span>
+                             @if( Model.PrimaryVariant.PreviousPrice != null ) { 
+                                <span class="price text-primary" style="text-decoration: line-through;"><br />@(Model.PrimaryVariant.PreviousPrice * Model.PrimaryVariant.VatRate)</span>
+                              }
                             <p>
                                 @Html.Raw(Model.ShortDescription)
                             </p>
@@ -35,10 +38,11 @@
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star-half-empty"></i>
                             </span>
-                            <span>Availability: <em class="text-muted">@Model.PrimaryVariant.StockStatus</em></span>                            
-                            @if( Model.Variants.Count > 1 ) { 
+                            <span>Availability: <em class="text-muted">@Model.PrimaryVariant.StockStatus</em></span>
+                            @if (Model.Variants.Count > 1)
+                            {
                                 <ul class="variantslist">
-                                    @foreach( var variant in Model.Variants )
+                                    @foreach (var variant in Model.Variants)
                                     {
                                         <li><img src="@variant.ImageUrl?w=40&h=40" /> @variant.PartNo @variant.VariantName </li>
                                     }

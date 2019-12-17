@@ -57,8 +57,14 @@ namespace Integration.Storm.Builder
             p.Variants.Add(primaryVariant);
             p.PrimaryVariant = primaryVariant;
 
+            decimal? previousPrice = null;
+            if( stormProductItem.PriceStandard.HasValue && stormProductItem.PriceStandard.Value > 0.0M )
+            {
+                previousPrice = stormProductItem.PriceStandard.Value;
+            }
+
             primaryVariant.PartNo = stormProductItem.PartNo;
-            primaryVariant.PreviousPrice = stormProductItem.PriceStandard;
+            primaryVariant.PreviousPrice = previousPrice;
             primaryVariant.Price = stormProductItem.Price;
             primaryVariant.PriceListId = stormProductItem.PriceListId.ToString();
             primaryVariant.VatRate = stormProductItem.VatRate;
@@ -160,8 +166,14 @@ namespace Integration.Storm.Builder
                 p.Variants.Add(primaryVariant);
                 p.PrimaryVariant = primaryVariant;
 
+                decimal? previousPrice = null;
+                if (stormProduct.PriceStandard.HasValue && stormProduct.PriceStandard.Value > 0.0M)
+                {
+                    previousPrice = stormProduct.PriceStandard.Value;
+                }
+
                 primaryVariant.PartNo = stormProduct.PartNo;
-                primaryVariant.PreviousPrice = stormProduct.PriceStandard;
+                primaryVariant.PreviousPrice = previousPrice;
                 primaryVariant.Price = stormProduct.Price;
                 primaryVariant.PriceListId = stormProduct.PriceListId.ToString();
                 primaryVariant.VatRate = stormProduct.VatRate;

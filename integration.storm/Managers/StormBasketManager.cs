@@ -52,7 +52,7 @@ namespace Integration.Storm.Managers
             item.Quantity = quantity;
             item.PriceListId = Convert.ToInt32(product.PrimaryVariant.PriceListId);
 
-            string url = $"ShoppingService.svc/rest/InsertBasketItem?basketid={basketId}&item=&createdBy=1";
+            string url = $"ShoppingService.svc/rest/InsertBasketItem?basketid={basketId}&createdBy=1";
 
             var stormBasket = _stormConnectionManager.PostResult<StormBasket>(url, item);
 
@@ -93,7 +93,14 @@ namespace Integration.Storm.Managers
 
         public IBasket FindBasketById(IUser currentUser, string externalId)
         {
-            string url = $"ShoppingService.svc/rest/GetBasket?id={externalId}&cultureCode={currentUser.LanguageCode}&currencyId={currentUser.CurrencyCode}";
+            string pricelistseed = string.Empty;
+            if( currentUser != null && currentUser.PriceLists != null )
+            {
+                pricelistseed = string.Join(',', currentUser.PriceLists);
+            }
+
+
+            string url = $"ShoppingService.svc/rest/GetBasket?id={externalId}&cultureCode={currentUser.LanguageCode}&currencyId={currentUser.CurrencyCode}&pricelistSeed={pricelistseed}";
 
             var stormBasket = _stormConnectionManager.GetResult<StormBasket>(url);
 
@@ -163,6 +170,12 @@ namespace Integration.Storm.Managers
                     continue;
                 }
 
+                decimal? priceStandard = null;
+                if( stormItem.PriceStandard.HasValue && stormItem.PriceStandard.Value > 0 )
+                {
+                    priceStandard = stormItem.PriceStandard.Value;
+                }
+
                 BasketItemDto itemdto = new BasketItemDto();
                 itemdto.ExternalId = stormItem.Id.ToString();
                 itemdto.ImageUrl = _configuration["Storm:ImagePrefix"] + stormItem.ImageKey;
@@ -170,7 +183,7 @@ namespace Integration.Storm.Managers
                 itemdto.PartNo = stormItem.PartNo;
                 itemdto.Quantity = Convert.ToInt32(stormItem.Quantity);
                 itemdto.Price = stormItem.PriceDisplay.Value;
-                itemdto.PricePrevious = stormItem.PriceOriginal;
+                itemdto.PricePrevious = priceStandard;
                 itemdto.VatRate = stormItem.VatRate.Value;
                 itemdto.Url = stormItem.UniqueName;
                 dto.NumberOfItems += Convert.ToInt32(itemdto.Quantity);

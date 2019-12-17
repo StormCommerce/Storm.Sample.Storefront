@@ -26,7 +26,8 @@
                             <h4><a v-bind:href="'/Product/Show/'+row.url">{{ row.name }}</a></h4>
                         </td>
                         <td class="item-price">
-                            <h4>{{ row.priceInclVat }}</h4>
+                            <h4>{{ row.price * row.vatRate }}</h4>
+                            <span v-if="row.pricePrevious" style="text-decoration: line-through;">{{ row.pricePrevious * row.vatRate }}</span>
                         </td>
                         <td class="item-count" style="width: 120px">
                             <div class="count-input">

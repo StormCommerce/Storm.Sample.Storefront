@@ -24,5 +24,8 @@ namespace Model.Commerce.Customer
         string City { get; set; }
         string CurrencyCode { get; set; }
         string LanguageCode { get; set; }
+
+        List<string> PriceLists { get; set; }
+
     }
 }

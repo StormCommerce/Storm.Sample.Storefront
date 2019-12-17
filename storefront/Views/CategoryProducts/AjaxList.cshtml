@@ -60,8 +60,14 @@
                                     </div>
                                 </div><!--/product-thumb-->
                                 <div class="product-desc">
-                                    <span class="product-price pull-right">{{ product.primaryVariant.price*product.primaryVariant.vatRate }}</span>
-                                    <h5 class="product-name"><a  v-bind:href="'/Product/Show/'+product.primaryVariant.url">{{ product.name }}</a></h5>
+                                    <span class="product-price pull-right">
+                                        {{ product.primaryVariant.price*product.primaryVariant.vatRate }}
+                                    </span>
+                                    <span v-if="product.primaryVariant.previousPrice" class="product-price pull-right" style="text-decoration: line-through;">
+                                        <br />
+                                        {{ product.primaryVariant.previousPrice*product.primaryVariant.vatRate  }}
+                                    </span>
+                                    <h5 class="product-name"><a v-bind:href="'/Product/Show/'+product.primaryVariant.url">{{ product.name }}</a></h5>
                                 </div><!--/product-desc-->
                             </div>
                         </div>

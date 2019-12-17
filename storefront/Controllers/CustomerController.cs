@@ -51,6 +51,14 @@ namespace Storefront.Controllers
             return Json(user);
         }
 
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            _sessionModel.CurrentUser = null;
+
+            return View();
+        }
+
         public JsonResult Me()
         {
             return Json(_sessionModel.CurrentUser);

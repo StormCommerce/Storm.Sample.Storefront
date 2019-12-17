@@ -42,6 +42,16 @@ namespace Integration.Storm.Managers
             dto.Email = user.Email;
             dto.Code = user.Code;
 
+            if( user.PricelistIds != null )
+            {
+                dto.PriceLists = new List<string>();
+                foreach( var entry in user.PricelistIds )
+                {
+                    dto.PriceLists.Add(entry.ToString());
+                }
+            }
+
+
             return dto;
         }
 

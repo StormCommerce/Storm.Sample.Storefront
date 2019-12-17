@@ -47,8 +47,13 @@
                     <span>Free shipping worldwide on order above $150</span>
                 </div>
                 <div class="col-sm-6">
-                    <ul class="list-inline pull-right">
-                        <li><a href="#"><i class="material-icons">perm_identity</i> Login</a></li>
+                    <ul class="list-inline pull-right" id="currentuser">
+                        <template v-if="user.externalId">
+                            <li><a href="/Customer/Logout"><i class="material-icons">perm_identity</i> Logout</a> {{ user.email }}</li>
+                        </template>
+                        <template v-else>
+                            <li><a href="/Customer/Login"><i class="material-icons">perm_identity</i> Login</a></li>
+                        </template>
                         <li><a href="#"><i class="material-icons">favorite_border</i> Wishlist (0)</a></li>
                         <li class="dropdown">
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle"><img src="/images/flags/usa.png" alt=""> English</a>
@@ -133,7 +138,7 @@
     <!--cart menu side panel-->
     <aside id="cartNavmenu" class="navmenu navmenu-default navmenu-fixed-right offcanvas">
         <div id="minicart" class="cart-inner">
-            <h4>Your cart ({{ info.externalId }})</h4>
+            <h4>Your cart ({{ info.ExternalId }})</h4>
             <hr>
             <ul class="list-unstyled cart-list margin-b-30">
                 <template v-for="row in info.items">
@@ -325,13 +330,28 @@
             el: '#navbar',
             data() {
                 return {
-                    nav: null
+                    nav: {}
                 }
             },
             mounted() {
                 axios
                     .get('/Category/AllCategories')
                     .then(response => (this.nav = response.data))
+            }
+
+        });
+
+         var navigation = new Vue({
+            el: '#currentuser',
+            data() {
+                return {
+                    user: {}
+                }
+            },
+            mounted() {
+                axios
+                    .get('/Customer/Me')
+                    .then(response => (this.user = response.data))
             }
 
         });

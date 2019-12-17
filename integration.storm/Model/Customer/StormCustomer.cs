@@ -24,7 +24,7 @@ namespace Integration.Storm.Model.Customer
         //public object[] Flags { get; set; }
         public bool? UseInvoiceAddressAsDeliveryAddress { get; set; }
         //public object[] Info { get; set; }
-        public object[] PricelistIds { get; set; }
+        public int?[] PricelistIds { get; set; }
     }
 
     public class Account
