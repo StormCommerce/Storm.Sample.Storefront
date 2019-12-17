@@ -1,0 +1,20 @@
+Extended License
+License ID: a8c7dd2f-258b-427b-a87e-46bf0167085a
+
+License holder: https://wrapbootstrap.com/user/MagnusAtStorm
+Date: November 12, 2019
+
+Item: Boland - Modern Online Shop Template
+Item#: WB01P97L2
+
+License terms:
+  1. Your use of the item may extend to multiple installations.
+  2. You may use the item in work which you are creating for your own purposes or for your clients.
+  3. You may license, sublicense, redistribute, or resell the item in the following circumstances:
+     1. the item is incorporated into a larger work you have created; or
+     2. if you modify the item and resell the end product.
+  4. If the item contains licensed components, those components must only be used within the item and you must not extract and use them on a stand-alone basis.
+  5. If the item was created using materials which are the subject of a GNU General Public License (GPL), your use of the item is subject to the terms of the GPL in place of the foregoing conditions (to the extent the GPL applies).
+
+Wrapmarket LLC
+https://wrapbootstrap.com/help/licenses
