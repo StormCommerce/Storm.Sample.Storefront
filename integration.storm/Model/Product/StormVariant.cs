@@ -20,7 +20,7 @@ namespace Integration.Storm.Model.Product
         public string CampaignImage { get; set; }
         public string LargeImage { get; set; }
         public string ThumbnailImage { get; set; }
-        public string[] Files { get; set; }
+        public StormFile[] Files { get; set; }
         public string FlagIdSeed { get; set; }
         public decimal? Price { get; set; }
         public decimal? PriceCatalog { get; set; }

@@ -1,9 +1,9 @@
 ﻿using Model.Commerce.Customer;
-using Model.Commerce.Product;
-using Model.Commerce.Product.InputModel;
+using Model.Commerce.Shopping;
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend
@@ -12,14 +12,8 @@ using System.Text;
  ******************************************************************************/
 namespace Model.Commerce.Managers
 {
-    public interface IProductManager
+    public interface ICheckoutManager
     {
-
-        IProductList FindByCategory(IUser currentUser, IProductListInputModel query);
-        IProduct FindByPartNo(IUser currentUser, string partNo);
-        IProduct FindByUrl(IUser currentUser, string url);
-        IProductList Query(IUser currentUser, string query);
-        IList<IProductFilter> FindAllFilters(IUser currentUser, IProductListInputModel query);
-
+        ICheckout GetCheckout(IUser currentUser, string basketExternalId);
     }
 }

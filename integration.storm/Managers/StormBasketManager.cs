@@ -1,4 +1,5 @@
-﻿using Integration.Storm.Model.Shopping;
+﻿using Integration.Storm.Builder;
+using Integration.Storm.Model.Shopping;
 using Microsoft.Extensions.Configuration;
 using Model.Commerce.Customer;
 using Model.Commerce.Dto.Product;
@@ -59,6 +60,8 @@ namespace Integration.Storm.Managers
             return BasketToDto(stormBasket);
         }
 
+       
+
         public IBasket CreateBasket(IUser currentUser)
         {
             BasketDto dto = new BasketDto();
@@ -96,7 +99,7 @@ namespace Integration.Storm.Managers
             string pricelistseed = string.Empty;
             if( currentUser != null && currentUser.PriceLists != null )
             {
-                pricelistseed = string.Join(',', currentUser.PriceLists);
+                pricelistseed = string.Join(",", currentUser.PriceLists);
             }
 
 
@@ -148,50 +151,11 @@ namespace Integration.Storm.Managers
         }
 
 
-
-
-        private BasketDto BasketToDto(StormBasket basket)
+        private IBasket BasketToDto(StormBasket stormBasket)
         {
-            BasketDto dto = new BasketDto();
-
-            dto.ExternalId = basket.Id.ToString();
-            dto.Items = new List<IBasketItem>();
-            dto.Shipping = basket.Summary.Freigt.Amount;
-            dto.ShippingInclVat = basket.Summary.Freigt.Amount + basket.Summary.Freigt.Vat;
-            dto.Total = basket.Summary.Total.Amount;
-            dto.TotalInclVat = basket.Summary.Total.Vat + dto.Total;
-            dto.TotalVat = basket.Summary.Total.Vat;
-            dto.NumberOfItems = 0;
-
-            foreach( var stormItem in basket.Items )
-            {
-                if( stormItem.Type.HasValue && _configuration["Storm:ExcludeTypeFromBasket"].Contains(stormItem.Type.Value.ToString()))
-                {
-                    continue;
-                }
-
-                decimal? priceStandard = null;
-                if( stormItem.PriceStandard.HasValue && stormItem.PriceStandard.Value > 0 )
-                {
-                    priceStandard = stormItem.PriceStandard.Value;
-                }
-
-                BasketItemDto itemdto = new BasketItemDto();
-                itemdto.ExternalId = stormItem.Id.ToString();
-                itemdto.ImageUrl = _configuration["Storm:ImagePrefix"] + stormItem.ImageKey;
-                itemdto.Name = stormItem.Name;
-                itemdto.PartNo = stormItem.PartNo;
-                itemdto.Quantity = Convert.ToInt32(stormItem.Quantity);
-                itemdto.Price = stormItem.PriceDisplay.Value;
-                itemdto.PricePrevious = priceStandard;
-                itemdto.VatRate = stormItem.VatRate.Value;
-                itemdto.Url = stormItem.UniqueName;
-                dto.NumberOfItems += Convert.ToInt32(itemdto.Quantity);
-
-                dto.Items.Add(itemdto);
-            }
-
-            return dto;
+            BasketBuilder basketBuilder = new BasketBuilder(_configuration);
+            return basketBuilder.BuildBasketDto(stormBasket);
         }
+
     }
 }

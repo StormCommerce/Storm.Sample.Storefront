@@ -25,9 +25,10 @@
                         <div class="item-description">
                             <h3>@Model.Name</h3>
                             <span class="price text-primary">@(Model.PrimaryVariant.Price * Model.PrimaryVariant.VatRate)</span>
-                             @if( Model.PrimaryVariant.PreviousPrice != null ) { 
+                            @if (Model.PrimaryVariant.PreviousPrice != null)
+                            {
                                 <span class="price text-primary" style="text-decoration: line-through;"><br />@(Model.PrimaryVariant.PreviousPrice * Model.PrimaryVariant.VatRate)</span>
-                              }
+                            }
                             <p>
                                 @Html.Raw(Model.ShortDescription)
                             </p>
@@ -41,12 +42,17 @@
                             <span>Availability: <em class="text-muted">@Model.PrimaryVariant.StockStatus</em></span>
                             @if (Model.Variants.Count > 1)
                             {
-                                <ul class="variantslist">
-                                    @foreach (var variant in Model.Variants)
-                                    {
-                                        <li><img src="@variant.ImageUrl?w=40&h=40" /> @variant.PartNo @variant.VariantName </li>
-                                    }
-                                </ul>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Select variant
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">                                        
+                                        @foreach (var variant in Model.Variants)
+                                        {
+                                        <a class="dropdown-item" href="#"><img src="@variant.ImageUrl?w=40&h=40" /> @variant.PartNo @variant.VariantName</a>
+                                        }
+                                    </div>
+                                </div>
                             }
                             <div class="count-input">
                                 <a class="incr-btn" data-action="decrease" href="#">–</a>
@@ -179,3 +185,10 @@
 
                     </script>
                 }
+
+@section Styles {
+    <style>
+
+    </style>
+
+}

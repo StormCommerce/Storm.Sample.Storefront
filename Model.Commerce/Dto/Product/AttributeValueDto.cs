@@ -19,5 +19,8 @@ namespace Model.Commerce.Dto.Product
         public string Value { get; set; }
         public string Uom { get; set; }
         public bool Hidden { get; set; }
+        public string GroupCode { get; set; }
+        public string GroupExternalId { get; set; }
+        public string QueryCode { get; set; }
     }
 }

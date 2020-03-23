@@ -151,7 +151,7 @@ namespace Integration.Storm.Builder
                 av.ExternalId = parametric.Id.ToString();
                 av.Uom = parametric.Uom;
                 av.AttributeCode = parametric.ValueId.HasValue ? parametric.ValueId.Value.ToString() : string.Empty;
-                av.Hidden = parametric.IsHidden;
+                av.Hidden = parametric.IsHidden??false;
                 p.Values.Add(av);
             }
             
