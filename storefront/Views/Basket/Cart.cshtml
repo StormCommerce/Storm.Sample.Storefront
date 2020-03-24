@@ -31,9 +31,9 @@
                         </td>
                         <td class="item-count" style="width: 120px">
                             <div class="count-input">
-                                <a class="incr-btn" data-action="decrease" href="#" v-bind:onclick="'numberButton($(this),\''+row.partNo+'\')'">–</a>
+                                <a class="incr-btn" data-action="decrease" v-bind:onclick="'numberButton($(this),\''+row.partNo+'\')'">–</a>
                                 <input class="quantity" type="text" v-bind:id="row.partNo+'-quantity'"  v-bind:value="row.quantity">
-                                <a class="incr-btn" data-action="increase" href="#" v-bind:onclick="'numberButton($(this),\''+row.partNo+'\')'">+</a>
+                                <a class="incr-btn" data-action="increase" v-bind:onclick="'numberButton($(this),\''+row.partNo+'\')'">+</a>
                             </div>
                         </td>
                         <td class="item-remove">
