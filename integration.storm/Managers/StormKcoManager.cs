@@ -61,6 +61,12 @@ namespace Integration.Storm.Managers
             url += "&ipAddress=" + "172.16.98.1";
             url += "&userAgent=" + "unknown";
 
+            if( currentUser.PriceLists != null )
+            {
+                url += "&priceListSeed=" + string.Join(",", currentUser.PriceLists);
+            }
+
+
             var paymentResponse = _stormConnectionManager.PostResult<StormPaymentResponse>(url, list);
 
             PaymentResponseDto dto = new PaymentResponseDto();
