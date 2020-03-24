@@ -14,6 +14,7 @@ namespace Integration.Storm.Managers
         TR GetResult<TR>(string url);
         TR PostResult<TR>(string url);
         TR PostResult<TR>(string url, object content);
+        TR FormPostResult<TR>(string url, Dictionary<string, string> formDictionary);
 
     }
 }

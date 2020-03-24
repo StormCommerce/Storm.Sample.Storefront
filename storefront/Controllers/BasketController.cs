@@ -18,11 +18,13 @@ namespace Storefront.Controllers
     {
         private IBasketManager _basketManager;
         private ISessionModel _sessionModel;
+        private ICheckoutManager _checkoutManager;
 
-        public BasketController(ISessionModel sessionModel, IBasketManager basketManager)
+        public BasketController(ISessionModel sessionModel, IBasketManager basketManager, ICheckoutManager checkoutManager)
         {
             _basketManager = basketManager;
             _sessionModel = sessionModel;
+            _checkoutManager = checkoutManager;
         }
 
 
@@ -34,7 +36,41 @@ namespace Storefront.Controllers
 
         public ActionResult Checkout()
         {
-            return View(GetCurrentBasket());
+            var checkout = _checkoutManager.GetCheckout(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId);
+            var paymentForm = _checkoutManager.PaymentForm(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId);
+
+            _sessionModel.CurrentCheckoutId = paymentForm.Reference;
+
+            return View(paymentForm);
+        }
+
+        public ActionResult OrderComplete()
+        {
+            var paymentForm = _checkoutManager.PaymentComplete(_sessionModel.CurrentCheckoutId);
+
+            _sessionModel.CurrentCheckoutId = null;
+            _sessionModel.CurrentBasketId = null;
+
+            return View(paymentForm);
+        }
+
+
+        public JsonResult CheckoutJson()
+        {
+            var checkout = _checkoutManager.GetCheckout(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId);
+
+            return Json(checkout);
+        }
+
+        public JsonResult SetDeliveryMethod(string deliveryMethodId)
+        {
+            var checkout = _checkoutManager.SetDeliveryMethod(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId, deliveryMethodId);
+            return Json(checkout);
+        }
+
+        public JsonResult PaymentForm()
+        {
+            return Json(_checkoutManager.PaymentForm(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId));
         }
 
         public JsonResult Minicart()

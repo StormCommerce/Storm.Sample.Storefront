@@ -15,5 +15,8 @@ namespace Model.Commerce.Managers
     public interface ICheckoutManager
     {
         ICheckout GetCheckout(IUser currentUser, string basketExternalId);
+        ICheckout SetDeliveryMethod(IUser currentUser, string basketExternalId, string deliveryMethodId);
+        IPaymentResponse PaymentForm(IUser currentUser, string basketId);
+        IPaymentResponse PaymentComplete(string reference);
     }
 }

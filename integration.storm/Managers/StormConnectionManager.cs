@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Integration.Storm.Exceptions;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -56,9 +57,19 @@ namespace Integration.Storm.Managers
                 var fullUrl = prepareUrl(url);
                 var respone = client.GetAsync(new Uri(fullUrl)).Result;
                 var result = respone.Content.ReadAsStringAsync();
-                if (respone.IsSuccessStatusCode)
+                if (!respone.IsSuccessStatusCode)
                 {
-                    // TODO
+                    if( (int)respone.StatusCode >= 400 && (int)respone.StatusCode <= 499 )
+                    {
+                        throw new BadRequestException((int)respone.StatusCode, respone.ReasonPhrase);
+                    }
+                    else if( (int)respone.StatusCode >=500 && (int)respone.StatusCode <= 599 )
+                    {
+                        throw new ServerErrorException((int)respone.StatusCode, respone.ReasonPhrase);
+                    } else
+                    {
+                        throw new Exception("Invalid request status " + (int)respone.StatusCode + ", reason=" + respone.ReasonPhrase);
+                    }
                 }
                 return JsonConvert.DeserializeObject<TR>(result.Result);
             }
@@ -81,9 +92,20 @@ namespace Integration.Storm.Managers
             {
                 var respone = client.PostAsync(new Uri(prepareUrl(url)), new StringContent(string.Empty, Encoding.UTF8, "application/json")).Result;
                 var result = respone.Content.ReadAsStringAsync();
-                if (respone.IsSuccessStatusCode)
+                if (!respone.IsSuccessStatusCode)
                 {
-                    // TODO
+                    if ((int)respone.StatusCode >= 400 && (int)respone.StatusCode <= 499)
+                    {
+                        throw new BadRequestException((int)respone.StatusCode, respone.ReasonPhrase);
+                    }
+                    else if ((int)respone.StatusCode >= 500 && (int)respone.StatusCode <= 599)
+                    {
+                        throw new ServerErrorException((int)respone.StatusCode, respone.ReasonPhrase);
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid request status " + (int)respone.StatusCode + ", reason=" + respone.ReasonPhrase);
+                    }
                 }
                 return JsonConvert.DeserializeObject<TR>(result.Result);
             }
@@ -113,13 +135,68 @@ namespace Integration.Storm.Managers
             {
                 var respone = client.PostAsync(new Uri(prepareUrl(url)), new StringContent(data, Encoding.UTF8, "application/json")).Result;
                 var result = respone.Content.ReadAsStringAsync();
-                if (respone.IsSuccessStatusCode)
+                if (!respone.IsSuccessStatusCode)
                 {
-                    // TODO
+                    if ((int)respone.StatusCode >= 400 && (int)respone.StatusCode <= 499)
+                    {
+                        throw new BadRequestException((int)respone.StatusCode, respone.ReasonPhrase);
+                    }
+                    else if ((int)respone.StatusCode >= 500 && (int)respone.StatusCode <= 599)
+                    {
+                        throw new ServerErrorException((int)respone.StatusCode, respone.ReasonPhrase);
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid request status " + (int)respone.StatusCode + ", reason=" + respone.ReasonPhrase);
+                    }
                 }
                 return JsonConvert.DeserializeObject<TR>(result.Result);
             }
         }
+
+        public TR FormPostResult<TR>(string url, Dictionary<string,string> formDictionary)
+        {
+           
+            var nvc = new List<KeyValuePair<string, string>>();
+            foreach( var key in formDictionary.Keys )
+            {
+                nvc.Add(new KeyValuePair<string, string>(key, formDictionary[key]));
+            }
+
+            var handler = new HttpClientHandler();
+
+            if (!string.IsNullOrEmpty(this.CertFilename))
+            {
+                var certFile = Path.Combine(Directory.GetCurrentDirectory(), this.CertFilename);
+                var certificate = new X509Certificate2(File.ReadAllBytes(certFile), this.CertPassword);
+                handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                handler.ClientCertificates.Add(certificate);
+            }
+            handler.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
+
+            using (var client = new HttpClient(handler))
+            {
+                var respone = client.PostAsync(new Uri(prepareUrl(url)), new FormUrlEncodedContent(nvc)).Result;
+                var result = respone.Content.ReadAsStringAsync();
+                if (!respone.IsSuccessStatusCode)
+                {
+                    if ((int)respone.StatusCode >= 400 && (int)respone.StatusCode <= 499)
+                    {
+                        throw new BadRequestException((int)respone.StatusCode, respone.ReasonPhrase);
+                    }
+                    else if ((int)respone.StatusCode >= 500 && (int)respone.StatusCode <= 599)
+                    {
+                        throw new ServerErrorException((int)respone.StatusCode, respone.ReasonPhrase);
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid request status " + (int)respone.StatusCode + ", reason=" + respone.ReasonPhrase);
+                    }
+                }
+                return JsonConvert.DeserializeObject<TR>(result.Result);
+            }
+        }
+
 
         private string prepareUrl(string url)
         {

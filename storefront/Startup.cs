@@ -60,6 +60,8 @@ namespace storefront
             services.AddTransient<IBasketManager, StormBasketManager>();
             services.AddTransient<IAccountManager, StormAccountManager>();
             services.AddTransient<IApplicationManager, StormApplicationManager>();
+            services.AddTransient<ICheckoutManager, StormCheckoutManager>();
+            services.AddTransient<IFormCheckoutProvider, StormKcoManager>();
 
             // Local services
             services.AddScoped<ISessionModel, SessionModel>();

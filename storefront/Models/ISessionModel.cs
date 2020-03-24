@@ -16,5 +16,6 @@ namespace Storefront.Models
     {
         IUser CurrentUser { get; set; }
         string CurrentBasketId { get; set; }
+        string CurrentCheckoutId { get; set; }
     }
 }

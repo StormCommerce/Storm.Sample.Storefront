@@ -25,6 +25,7 @@ namespace Storefront.Models
         IConfiguration _configuration;
         IHttpContextAccessor _httpContextAccessor;
         string _basketId;
+        string _checkoutId; 
 
         public SessionModel(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
@@ -87,6 +88,35 @@ namespace Storefront.Models
                 }
                 _basketId = value;
             } 
+        }
+
+
+        public string CurrentCheckoutId
+        {
+            get
+            {
+                if (_checkoutId != null) return _checkoutId;
+                var checkoutId = _httpContextAccessor.HttpContext.Request.Cookies["checkoutId"];
+                if (!string.IsNullOrEmpty(checkoutId))
+                {
+                    return checkoutId;
+                }
+                return null;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    CookieOptions option = new CookieOptions();
+                    option.Expires = DateTime.Now.AddMonths(1);
+                    _httpContextAccessor.HttpContext.Response.Cookies.Append("checkoutId", value, option);
+                }
+                else
+                {
+                    _httpContextAccessor.HttpContext.Response.Cookies.Delete("checkoutId");
+                }
+                _checkoutId = value;
+            }
         }
     }
 }

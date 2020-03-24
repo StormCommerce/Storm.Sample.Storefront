@@ -6,7 +6,7 @@ namespace Integration.Storm.Model.Customer
 {
     public class StormCustomer
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Key { get; set; }
         public string Code { get; set; }
         public string Email { get; set; }
@@ -29,7 +29,7 @@ namespace Integration.Storm.Model.Customer
 
     public class Account
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Key { get; set; }
         public string LoginName { get; set; }
         public string Name { get; set; }
@@ -40,7 +40,7 @@ namespace Integration.Storm.Model.Customer
 
     public class Address
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string CareOf { get; set; }
         public string Line1 { get; set; }
         public string Line2 { get; set; }
