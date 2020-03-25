@@ -8,5 +8,6 @@ namespace Model.Commerce.Shopping
     {
         string Reference { get; set; }
         string Html { get; set; }
+        string FormCheckoutProvider { get; set; }
     }
 }

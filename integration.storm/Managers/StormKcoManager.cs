@@ -23,6 +23,8 @@ namespace Integration.Storm.Managers
         IProductManager _productManager;
         IConfiguration _configuration;
 
+        const string FORM_CHECKOUT_PROVIDER = "KCOv3";
+
         public StormKcoManager(IStormConnectionManager connectionManager, IProductManager productManager, IConfiguration configuration)
         {
             _stormConnectionManager = connectionManager;
@@ -41,6 +43,7 @@ namespace Integration.Storm.Managers
 
             PaymentResponseDto dto = new PaymentResponseDto();
             dto.Html = paymentResponse.PaymentReference;
+            dto.FormCheckoutProvider = FORM_CHECKOUT_PROVIDER;
 
             return dto;
         }
@@ -73,6 +76,7 @@ namespace Integration.Storm.Managers
 
             dto.Reference = paymentResponse.RedirectUrl;
             dto.Html = paymentResponse.PaymentReference;
+            dto.FormCheckoutProvider = FORM_CHECKOUT_PROVIDER;
 
             return dto;
         }

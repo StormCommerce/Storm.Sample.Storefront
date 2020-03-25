@@ -63,21 +63,16 @@
                 <ul class="list-unstyled">
                     <template v-for="row in info.deliveryMethods">
                         <li>
-
                             <template v-if="row.isSelected">
-                                <input type="radio" class="icheck" name="paymentmethod" checked v-bind:onclick="'checkout.setDeliveryMethod(\''+row.externalId+'\')'" />
+                                <input type="radio" class="icheck" name="deliveryMethod" checked v-bind:onclick="'checkout.setDeliveryMethod(\''+row.externalId+'\')'" />
                             </template>
                             <template v-if="!row.isSelected">
-                                <input type="radio" class="icheck" name="paymentmethod" v-bind:onclick="'checkout.setDeliveryMethod(\''+row.externalId+'\')'" />
+                                <input type="radio" class="icheck" name="deliveryMethod" v-bind:onclick="'checkout.setDeliveryMethod(\''+row.externalId+'\')'" />
                             </template>
                             {{ row.externalId }} {{ row.name }}
                         </li>
                     </template>
                 </ul>
-
-
-
-
             </div>
         </div>
 
@@ -88,18 +83,23 @@
 
 <div class="space-60"></div>
 <div class="row">
-        <div class="col-sm-12 margin-b-10">
-            @Html.Raw(Model.Html)
-        </div>
+    <div class="col-sm-12 margin-b-10">
+        <!-- This is the FORM CHECKOUT IFrame -->
+        @Html.Raw(Model.Html)
+        <!-- /This is the FORM CHECKOUT IFrame -->
     </div>
+</div>
 @section scripts {
     <script language="JavaScript">
-        function pauseKlarna() {
+        /* SAMPLE CODE for Klarna */
+        function pauseFormCheckout() {
+            //if( Model.FormCheckoutProvider == "KCOv3" ) { 
             window._klarnaCheckout(function (api) {
                 api.suspend();
             });
+            //}
         }
-        function resumeKlarna() {
+        function resumeFormCheckout() {
             window._klarnaCheckout(function (api) {
                 api.resume();
             });
@@ -128,24 +128,12 @@
                         .then(response => (this.info = response.data))
                 },
                 setDeliveryMethod: function (deliveryMethodId) {
-                    pauseKlarna();
+                    pauseFormCheckout();
                     axios
                         .get('/Basket/SetDeliveryMethod?deliveryMethodId=' + deliveryMethodId)
                         .then(response => (this.info = response.data))
-                        .then(x => { resumeKlarna() })
+                        .then(x => { resumeFormCheckout() })
                         
-                },
-                updateCart: function (partNo, quantity) {
-                    axios
-                        .get('/Basket/UpdateCart?partNo=' + partNo + '&quantity=' + quantity)
-                        .then(response => (this.info = response.data))
-                        .then(response => cart.refreshWithData(response))
-                },
-                removeFromCart: function (partNo) {
-                    axios
-                        .get('/Basket/RemoveFromCart?partNo=' + partNo)
-                        .then(response => (this.info = response.data))
-                        .then(response => cart.refreshWithData(response))
                 }
             }
         });

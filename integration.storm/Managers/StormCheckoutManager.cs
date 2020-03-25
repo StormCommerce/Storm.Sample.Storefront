@@ -42,9 +42,9 @@ namespace Integration.Storm.Managers
             {
                 pricelistseed = string.Join(",", currentUser.PriceLists);
             }
-
-
-            string url = $"ShoppingService.svc/rest/GetCheckout2?basketId={basketExternalId}&cultureCode={currentUser.LanguageCode}&currencyId={currentUser.CurrencyCode}&pricelistSeed={pricelistseed}";
+            string url = $"ShoppingService.svc/rest/GetCheckout2?format=json";
+            url += $"&basketId={basketExternalId}";
+            url += addUserUrlDetails(currentUser);
 
             var stormCheckout = _stormConnectionManager.GetResult<StormCheckout>(url);
 

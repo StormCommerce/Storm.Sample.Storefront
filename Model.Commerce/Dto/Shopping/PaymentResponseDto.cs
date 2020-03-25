@@ -9,5 +9,6 @@ namespace Model.Commerce.Dto.Shopping
     {
         public string Reference { get; set; }
         public string Html { get; set; }
+        public string FormCheckoutProvider { get; set; }
     }
 }
