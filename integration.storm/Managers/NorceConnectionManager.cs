@@ -106,8 +106,8 @@ namespace Integration.Storm.Managers
         private async Task<string> GetUncachedAccessToken()
         {
             var httpClient = new HttpClient();
-            var oauthClientId = "f6d2f4bd-736f-4429-9538-61501528464c";
-            var oauthClientSecret = "8c151a02-1813-445e-816f-05be687c9147";
+            var oauthClientId = "";
+            var oauthClientSecret = "";
             var environment = "lab";
 
             var requestBody = $"client_id={oauthClientId}&client_secret={oauthClientSecret}&grant_type=client_credentials&scope={environment}";
