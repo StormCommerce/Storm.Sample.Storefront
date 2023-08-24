@@ -9,6 +9,8 @@ using Model.Commerce.Shopping;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend
@@ -30,13 +32,13 @@ namespace Integration.Storm.Managers
             _configuration = configuration;
         }
 
-        public IBasket AddItem(IUser currentUser, string basketId, string partNo, int quantity)
+        public async Task<IBasket> AddItem(IUser currentUser, string basketId, string partNo, int quantity)
         {
             // Find current item
-            var product = _productManager.FindByPartNo(currentUser, partNo);
+            var product = await _productManager.FindByPartNo(currentUser, partNo);
             if (product == null) return null;
 
-            var basket = FindBasketById(currentUser, basketId);
+            var basket = await FindBasketById(currentUser, basketId);
             if (basket == null) return null;
 
             // This should be a firstOrDefault() but it does not work for unknown reason :-)
@@ -44,7 +46,7 @@ namespace Integration.Storm.Managers
             {
                 if( curitm.PartNo.Equals(partNo))
                 {
-                    return UpdateItem(currentUser, basketId, partNo, quantity + Convert.ToInt32(curitm.Quantity));
+                    return await UpdateItem(currentUser, basketId, partNo, quantity + Convert.ToInt32(curitm.Quantity));
                 }
             }
 
@@ -55,14 +57,12 @@ namespace Integration.Storm.Managers
 
             string url = $"ShoppingService.svc/rest/InsertBasketItem?basketid={basketId}&createdBy=1";
 
-            var stormBasket = _stormConnectionManager.PostResult<StormBasket>(url, item);
+            var stormBasket = await _stormConnectionManager.PostResult<StormBasket>(url, item);
 
             return BasketToDto(stormBasket);
         }
 
-       
-
-        public IBasket CreateBasket(IUser currentUser)
+        public async Task<IBasket> CreateBasket(IUser currentUser)
         {
             BasketDto dto = new BasketDto();
 
@@ -81,7 +81,7 @@ namespace Integration.Storm.Managers
             }
             stormBasket.CurrencyId =  Convert.ToInt32( currentUser.CurrencyCode );
 
-            stormBasket = _stormConnectionManager.PostResult<StormBasket>(url, stormBasket);
+            stormBasket = await _stormConnectionManager.PostResult<StormBasket>(url, stormBasket);
 
             dto.ExternalId = stormBasket.Id.ToString();
             dto.Items = new List<IBasketItem>();
@@ -89,12 +89,12 @@ namespace Integration.Storm.Managers
             return dto;
         }
 
-        public IBasket DeleteItem(IUser currentUser, string basketId, string partNo)
+        public async Task<IBasket> DeleteItem(IUser currentUser, string basketId, string partNo)
         {
             throw new NotImplementedException();
         }
 
-        public IBasket FindBasketById(IUser currentUser, string externalId)
+        public async Task<IBasket> FindBasketById(IUser currentUser, string externalId)
         {
             string pricelistseed = string.Empty;
             if( currentUser != null && currentUser.PriceLists != null )
@@ -105,7 +105,7 @@ namespace Integration.Storm.Managers
 
             string url = $"ShoppingService.svc/rest/GetBasket?id={externalId}&cultureCode={currentUser.LanguageCode}&currencyId={currentUser.CurrencyCode}&pricelistSeed={pricelistseed}";
 
-            var stormBasket = _stormConnectionManager.GetResult<StormBasket>(url);
+            var stormBasket = await _stormConnectionManager.GetResult<StormBasket>(url);
 
             if (stormBasket == null) return null;
             if (!stormBasket.IsBuyable) return null;
@@ -113,18 +113,18 @@ namespace Integration.Storm.Managers
             return BasketToDto(stormBasket);
         }
 
-        public IBasket FindOrCreateBasket(IUser currentUser)
+        public async Task<IBasket> FindOrCreateBasket(IUser currentUser)
         {
             throw new NotImplementedException();
         }
 
-        public IBasket UpdateItem(IUser currentUser, string basketId, string partNo, int quantity)
+        public async Task<IBasket> UpdateItem(IUser currentUser, string basketId, string partNo, int quantity)
         {
             // Find current item
-            var product = _productManager.FindByPartNo(currentUser, partNo);
+            var product = await _productManager.FindByPartNo(currentUser, partNo);
             if (product == null) return null;
 
-            var basket = FindBasketById(currentUser, basketId);
+            var basket = await FindBasketById(currentUser, basketId);
             if (basket == null) return null;
 
             // This should be a firstOrDefault() but it does not work for unknown reason :-)
@@ -140,16 +140,14 @@ namespace Integration.Storm.Managers
 
                     string url = $"ShoppingService.svc/rest/UpdateBasketItem?basketId={basketId}&item=";
 
-                    var stormBasket = _stormConnectionManager.PostResult<StormBasket>(url, item);
+                    var stormBasket = await _stormConnectionManager.PostResult<StormBasket>(url, item);
 
                     return BasketToDto(stormBasket);
                 }
             }
 
             return basket;
-            
         }
-
 
         private IBasket BasketToDto(StormBasket stormBasket)
         {

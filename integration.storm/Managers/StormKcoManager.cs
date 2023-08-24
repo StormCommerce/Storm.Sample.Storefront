@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend
@@ -32,14 +34,14 @@ namespace Integration.Storm.Managers
             _configuration = configuration;
         }
 
-        public IPaymentResponse PaymentComplete(string reference)
+        public async Task<IPaymentResponse> PaymentComplete(string reference)
         {
             List<StormNameValue> list = new List<StormNameValue>();
             list.Add(new StormNameValue() { Name = "checkoutId", Value = reference });
             list.Add(new StormNameValue() { Name = "PaymentService", Value = "KlarnaCheckoutV3" });
 
             string url = $"ShoppingService.svc/rest/PaymentCallback?format=json";
-            var paymentResponse = _stormConnectionManager.PostResult<StormPaymentResponse>(url, list);
+            var paymentResponse = await _stormConnectionManager.PostResult<StormPaymentResponse>(url, list);
 
             PaymentResponseDto dto = new PaymentResponseDto();
             dto.Html = paymentResponse.PaymentReference;
@@ -48,7 +50,7 @@ namespace Integration.Storm.Managers
             return dto;
         }
 
-        public IPaymentResponse PaymentForm(IUser currentUser, string basketId)
+        public async Task<IPaymentResponse> PaymentForm(IUser currentUser, string basketId)
         {
             var baseUrl = _configuration["Storm:BaseUrl"];
 
@@ -70,7 +72,7 @@ namespace Integration.Storm.Managers
             }
 
 
-            var paymentResponse = _stormConnectionManager.PostResult<StormPaymentResponse>(url, list);
+            var paymentResponse = await _stormConnectionManager.PostResult<StormPaymentResponse>(url, list);
 
             PaymentResponseDto dto = new PaymentResponseDto();
 

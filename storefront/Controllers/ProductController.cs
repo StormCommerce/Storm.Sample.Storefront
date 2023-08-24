@@ -26,17 +26,17 @@ namespace Storefront.Controllers
 
 
 
-        public IActionResult OneProduct([FromRoute]string id)
+        public async Task<IActionResult> OneProduct([FromRoute]string id)
         {
-            var product = _productManager.FindByUrl(_sessionModel.CurrentUser, id);
+            var product = await _productManager.FindByUrl(_sessionModel.CurrentUser, id);
 
 
             return View(product);
         }
 
-        public IActionResult Show([FromRoute]string id)
+        public async Task<IActionResult> Show([FromRoute]string id)
         {
-            var product = _productManager.FindByUrl(_sessionModel.CurrentUser, id);
+            var product = await _productManager.FindByUrl(_sessionModel.CurrentUser, id);
 
 
             return View(product);

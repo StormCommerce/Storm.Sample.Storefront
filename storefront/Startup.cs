@@ -52,7 +52,7 @@ namespace storefront
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
-            services.AddTransient<IStormConnectionManager, StormConnectionManager>();
+            services.AddTransient<IStormConnectionManager, NorceConnectionManager>();
             services.AddTransient<IProductBuilder<StormProductItem, StormProduct>, ProductBuilder>();
             services.AddTransient<IProductManager, StormProductManager>();
             services.AddTransient<ICategoryManager, StormCategoryManager>();

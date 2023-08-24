@@ -7,6 +7,8 @@ using Model.Commerce.Product;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend
@@ -27,14 +29,14 @@ namespace Integration.Storm.Managers
             _configuration = configuration;
         }
 
-        public IList<ICategory> FindAll(IUser currentUser)
+        public async Task<IList<ICategory>> FindAll(IUser currentUser)
         {
             // URL ProductService.svc/rest/ListCategoryItems?format=json
             string url = $"ProductService.svc/rest/ListCategoryItems";
 
             // This method is supposed to be stored in cache so that it will not retrieve
             // categories from Storm each time.
-            var allCategories = _stormConnectionManager.GetResult<List<StormCategory>>(url);
+            var allCategories = await _stormConnectionManager.GetResult<List<StormCategory>>(url);
 
             IList<ICategory> result = new List<ICategory>();
 

@@ -3,6 +3,7 @@ using Model.Commerce.Shopping;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
@@ -14,9 +15,9 @@ namespace Model.Commerce.Managers
 {
     public interface ICheckoutManager
     {
-        ICheckout GetCheckout(IUser currentUser, string basketExternalId);
-        ICheckout SetDeliveryMethod(IUser currentUser, string basketExternalId, string deliveryMethodId);
-        IPaymentResponse PaymentForm(IUser currentUser, string basketId);
-        IPaymentResponse PaymentComplete(string reference);
+        Task<ICheckout> GetCheckout(IUser currentUser, string basketExternalId);
+        Task<ICheckout> SetDeliveryMethod(IUser currentUser, string basketExternalId, string deliveryMethodId);
+        Task<IPaymentResponse> PaymentForm(IUser currentUser, string basketId);
+        Task<IPaymentResponse> PaymentComplete(string reference);
     }
 }

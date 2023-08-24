@@ -23,11 +23,11 @@ namespace Storefront.Controllers
             _sessionModel = sessionModel;
             _httpContextAccessor = httpContextAccessor;
         }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //
+        // public IActionResult Index()
+        // {
+        //     return View();
+        // }
 
         [HttpGet]
         public ActionResult Login()
@@ -36,9 +36,9 @@ namespace Storefront.Controllers
         }
 
         [HttpPost]
-        public JsonResult Login([FromBody]LoginInputModel loginInputModel)
+        public async Task<JsonResult> Login([FromBody]LoginInputModel loginInputModel)
         {
-            IUser user = _accountManager.Login(loginInputModel.Username, loginInputModel.Password);
+            IUser user = await _accountManager.Login(loginInputModel.Username, loginInputModel.Password);
 
             if( user == null )
             {

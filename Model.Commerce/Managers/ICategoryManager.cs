@@ -3,6 +3,8 @@ using Model.Commerce.Product;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend
@@ -13,6 +15,6 @@ namespace Model.Commerce.Managers
 {
     public interface ICategoryManager
     {
-        IList<ICategory> FindAll(IUser currentUser);
+        Task<IList<ICategory>> FindAll(IUser currentUser);
     }
 }

@@ -7,6 +7,7 @@ using Model.Commerce.Product;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Integration.Storm.Managers
 {
@@ -19,7 +20,7 @@ namespace Integration.Storm.Managers
             _connectionManager = connectionManager;
         }
 
-        public List<IManufacturer> FindAllManufacturers(IUser currentUser)
+        public async Task<List<IManufacturer>> FindAllManufacturers(IUser currentUser)
         {
 
             // Find the list of products
@@ -27,7 +28,7 @@ namespace Integration.Storm.Managers
 
             url += addUserUrlDetails(currentUser);
             
-            var manufacturerList = _connectionManager.GetResult<ItemListResult<StormManufacturer>>(url);
+            var manufacturerList = await _connectionManager.GetResult<ItemListResult<StormManufacturer>>(url);
 
             List<IManufacturer> list = new List<IManufacturer>();
 
@@ -44,17 +45,17 @@ namespace Integration.Storm.Managers
             return list;
         }
 
-        public List<IAttribute> FindAllParametricsWithValues(IUser currentUser)
+        public async Task<List<IAttribute>> FindAllParametricsWithValues(IUser currentUser)
         {
             // Find the list of products
             string url = "ProductService.svc/rest/ListParametricInfo?format=json";
 
             url += addUserUrlDetails(currentUser);
-            var parametricsList = _connectionManager.GetResult<List<StormParametricInfo>>(url);
+            var parametricsList = await _connectionManager.GetResult<List<StormParametricInfo>>(url);
 
             url = "ProductService.svc/rest/ListParametricValues2?format=json";
             url += addUserUrlDetails(currentUser);
-            var parametricsValueList = _connectionManager.GetResult<List<StormParametric>>(url);
+            var parametricsValueList = await _connectionManager.GetResult<List<StormParametric>>(url);
             Dictionary<int, StormParametric> valueIds = new Dictionary<int, StormParametric>();
             foreach( var value in parametricsValueList )
             {
@@ -117,7 +118,7 @@ namespace Integration.Storm.Managers
             return list;
         }
 
-        private void AddParametricChildren(int listId, string name, string prefix, int type, List<AttributeValueDto> list, Dictionary<int, StormParametric> map, IUser currentUser)
+        private async Task AddParametricChildren(int listId, string name, string prefix, int type, List<AttributeValueDto> list, Dictionary<int, StormParametric> map, IUser currentUser)
         {
             
             // Find the list of ids
@@ -128,7 +129,7 @@ namespace Integration.Storm.Managers
             url += $"&id={listId}";
             url += $"&type={type}";
 
-            var parametricsList = _connectionManager.GetResult<List<StormParametric>>(url);
+            var parametricsList = await _connectionManager.GetResult<List<StormParametric>>(url);
 
             foreach (var child in parametricsList)
             {
