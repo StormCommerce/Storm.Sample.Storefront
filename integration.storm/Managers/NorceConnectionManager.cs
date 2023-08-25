@@ -8,26 +8,81 @@ using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Integration.Storm.Managers
 {
+    public class Authentication
+    {
+        public IMemoryCache Cache { get; }
+
+        public Authentication(IMemoryCache cache)
+        {
+            Cache = cache;
+        }
+
+        public async Task<string> GetUncachedAccessToken()
+        {
+            var auth = Cache.Get<Auth>("accessTokenKey");
+            if (auth is null)
+            {
+                var httpClient = new HttpClient();
+                var oauthClientId = "";
+                var oauthClientSecret = "";
+                var environment = "lab";
+
+                var requestBody = $"client_id={oauthClientId}&client_secret={oauthClientSecret}&grant_type=client_credentials&scope={environment}";
+                var tokenRequest = new HttpRequestMessage
+                                   {
+                                       RequestUri = new Uri("https://identity.storm.io/1.0/connect/token"),
+                                       Content = new StringContent(requestBody,
+                                           Encoding.UTF8,
+                                           "application/x-www-form-urlencoded"),
+                                       Method = HttpMethod.Post
+                                   };
+                var httpResponse = await httpClient.SendAsync(tokenRequest);
+
+                if (!httpResponse.IsSuccessStatusCode)
+                {
+                    // Handle error
+                    return null;
+                }
+
+                auth = JsonSerializer.Deserialize<Auth>(httpResponse.Content.ReadAsStringAsync().Result);
+                Cache.Set("accessTokenKey", auth, DateTimeOffset.Now.AddSeconds(auth.expires_in - 1));
+            }
+
+            return auth.access_token;
+        }
+    }
+
+    public class Auth
+    {
+        public string access_token { get; set; }
+        public int expires_in { get; set; }
+        public string token_type { get; set; }
+        public string scope { get; set; }
+    }
+
     public class NorceConnectionManager : IStormConnectionManager
     {
         IConfiguration _configuration;
         private string AppId;
         private string StormBaseUrl;
         private static HttpClient httpClient = new HttpClient();
+        private readonly Authentication _authentication;
 
-        public NorceConnectionManager(IConfiguration configuration)
+        public NorceConnectionManager(IConfiguration configuration, IMemoryCache cache)
         {
             AppId = configuration["Storm:ApplicationId"];
             StormBaseUrl = configuration["Storm:ApiUrl"];
             _configuration = configuration;
+            _authentication = new Authentication(cache);
         }
 
         private async Task<TR> SendRequest<TR>(HttpRequestMessage request)
         {
-            var accessToken = await GetUncachedAccessToken();
+            var accessToken = await _authentication.GetUncachedAccessToken();
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             request.Headers.Add("applicationId", AppId);
 
@@ -102,34 +157,6 @@ namespace Integration.Storm.Managers
         //
         //     return accessToken;
         // }
-
-        private async Task<string> GetUncachedAccessToken()
-        {
-            var httpClient = new HttpClient();
-            var oauthClientId = "";
-            var oauthClientSecret = "";
-            var environment = "lab";
-
-            var requestBody = $"client_id={oauthClientId}&client_secret={oauthClientSecret}&grant_type=client_credentials&scope={environment}";
-            var tokenRequest = new HttpRequestMessage
-                               {
-                                   RequestUri = new Uri("https://identity.storm.io/1.0/connect/token"),
-                                   Content = new StringContent(requestBody,
-                                       Encoding.UTF8,
-                                       "application/x-www-form-urlencoded"),
-                                   Method = HttpMethod.Post
-                               };
-            var httpResponse = await httpClient.SendAsync(tokenRequest);
-
-            if (!httpResponse.IsSuccessStatusCode)
-            {
-                // Handle error
-                return null;
-            }
-
-            var response = JsonSerializer.Deserialize<Dictionary<string, object>>(httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult());
-            return response["access_token"].ToString();
-        }
 
         private string prepareUrl(string url)
         {

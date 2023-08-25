@@ -1,4 +1,7 @@
-﻿// using Integration.Storm.Exceptions;
+﻿//
+// NOTE: OLD Cert-based connection manager //Mörten
+//
+// using Integration.Storm.Exceptions;
 // using Microsoft.Extensions.Configuration;
 // using Newtonsoft.Json;
 // using System;
