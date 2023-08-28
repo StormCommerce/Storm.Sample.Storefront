@@ -1,8 +1,5 @@
 ﻿using Model.Commerce.Extensions;
 using Model.Commerce.Product;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se

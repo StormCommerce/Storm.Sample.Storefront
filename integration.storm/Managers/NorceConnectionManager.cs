@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Model.Commerce.Extensions;
 
 namespace Integration.Storm.Managers
 {
@@ -19,6 +20,7 @@ namespace Integration.Storm.Managers
         public Authentication(IMemoryCache cache)
         {
             Cache = cache;
+
         }
 
         public async Task<string> GetUncachedAccessToken()
@@ -27,8 +29,8 @@ namespace Integration.Storm.Managers
             if (auth is null)
             {
                 var httpClient = new HttpClient();
-                var oauthClientId = "";
-                var oauthClientSecret = "";
+                var oauthClientId = "name";
+                var oauthClientSecret = "pass";
                 var environment = "lab";
 
                 var requestBody = $"client_id={oauthClientId}&client_secret={oauthClientSecret}&grant_type=client_credentials&scope={environment}";
@@ -49,7 +51,7 @@ namespace Integration.Storm.Managers
                 }
 
                 auth = JsonSerializer.Deserialize<Auth>(httpResponse.Content.ReadAsStringAsync().Result);
-                Cache.Set("accessTokenKey", auth, DateTimeOffset.Now.AddSeconds(auth.expires_in - 1));
+                Cache.Set("accessTokenKey", auth, DateTimeOffset.Now.AddSeconds(auth.expires_in - 10));
             }
 
             return auth.access_token;
@@ -103,7 +105,7 @@ namespace Integration.Storm.Managers
                 throw new Exception("Invalid request status " + (int)response.StatusCode + ", reason=" + response.ReasonPhrase);
             }
 
-            var r = JsonSerializer.Deserialize<TR>(result.Result);
+            var r = JsonSerializer.Deserialize<TR>(result.Result, EpochConverter.Options);
             return r;
         }
 
@@ -139,7 +141,7 @@ namespace Integration.Storm.Managers
 
         public async Task<TR> FormPostResult<TR>(string url, Dictionary<string, string> formDictionary)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         // private async Task<string> GetAccess(string url)

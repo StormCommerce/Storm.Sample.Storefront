@@ -2,13 +2,11 @@
 using Integration.Storm.Model.Shopping;
 using Microsoft.Extensions.Configuration;
 using Model.Commerce.Customer;
-using Model.Commerce.Dto.Product;
 using Model.Commerce.Dto.Shopping;
 using Model.Commerce.Managers;
 using Model.Commerce.Shopping;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 /******************************************************************************

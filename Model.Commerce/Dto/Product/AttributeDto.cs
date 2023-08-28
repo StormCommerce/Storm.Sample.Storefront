@@ -1,7 +1,5 @@
 ﻿using Model.Commerce.Product;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Model.Commerce.Dto.Product
 {
@@ -15,7 +13,7 @@ namespace Model.Commerce.Dto.Product
 
         public string Uom { get; set; }
 
-        public Commerce.Product.ValueType ValueType { get; set; }
+        public ValueType ValueType { get; set; }
 
         public List<AttributeValueDto> Values { get; set; }
 

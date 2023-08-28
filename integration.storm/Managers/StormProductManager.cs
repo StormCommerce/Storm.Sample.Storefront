@@ -8,7 +8,11 @@ using Model.Commerce.Product;
 using Model.Commerce.Product.InputModel;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 /******************************************************************************
@@ -268,5 +272,55 @@ namespace Integration.Storm.Managers
             return url;
 
         }
+    }
+
+
+    //
+    // public class JsonDateTimeConverter : JsonConverter<DateTime>
+    // {
+    //     public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    //     {
+    //         var value = reader.GetString();
+    //         if (DateTime.TryParse(value, out var result))
+    //         {
+    //             return result;
+    //         }
+    //         return default;
+    //     }
+    //
+    //     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+    //     {
+    //         writer.WriteStringValue(value.ToString("yyyy-MM-ddTHH:mm:sszzz"));
+    //     }
+    // }
+
+    public class JsonNullableDateTimeConverter : JsonConverter<DateTime?>
+    {
+        public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var value = reader.GetString();
+            Debug.WriteLine(value);
+            Console.WriteLine(value);
+
+            if (DateTime.TryParse(value, out var result))
+            {
+                return result;
+            }
+            return default;
+        }
+
+        public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
+        {
+            if (value.HasValue)
+            {
+                writer.WriteStringValue(value.Value.ToString("yyyy-MM-ddTHH:mm:sszzz"));
+            }
+            else
+            {
+                writer.WriteNullValue();
+            }
+        }
+
+
     }
 }

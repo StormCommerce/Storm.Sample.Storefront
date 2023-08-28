@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using Integration.Storm.Builder;
 using Integration.Storm.Extensions;
 using Integration.Storm.Managers;
@@ -9,8 +7,6 @@ using Integration.Storm.Model.Product;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -18,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Model.Commerce.Extensions;
 using Model.Commerce.Managers;
 using Storefront.Models;
+using JsonNullableDateTimeConverter = Model.Commerce.Extensions.JsonNullableDateTimeConverter;
 
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
@@ -50,11 +47,20 @@ namespace storefront
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonNullableDateTimeConverter());
+                options.JsonSerializerOptions.Converters.Add(new JsonDateTimeConverter());
+                options.JsonSerializerOptions.Converters.Add(new JsonDateTimeOffsetConverter());
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                options.JsonSerializerOptions.IgnoreReadOnlyProperties = false;
+                options.JsonSerializerOptions.AllowTrailingCommas = true;
+                options.JsonSerializerOptions.WriteIndented = true;
+                options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+            });
 
             // Accessor for creating interaction to services
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
 
             services.AddTransient<IStormConnectionManager, NorceConnectionManager>();
             services.AddTransient<IProductBuilder<StormProductItem, StormProduct>, ProductBuilder>();

@@ -1,7 +1,5 @@
 ﻿using Model.Commerce.Customer;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Model.Commerce.Dto.Customer
 {

@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend

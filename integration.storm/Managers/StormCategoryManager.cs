@@ -1,12 +1,9 @@
 ﻿using Integration.Storm.Model.Product.Category;
 using Microsoft.Extensions.Configuration;
 using Model.Commerce.Customer;
-using Model.Commerce.Dto.Product;
 using Model.Commerce.Managers;
 using Model.Commerce.Product;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 /******************************************************************************
