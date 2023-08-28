@@ -20,11 +20,6 @@ namespace Storefront.Controllers
             _sessionModel = sessionModel;
             _httpContextAccessor = httpContextAccessor;
         }
-        //
-        // public IActionResult Index()
-        // {
-        //     return View();
-        // }
 
         [HttpGet]
         public ActionResult Login()

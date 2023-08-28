@@ -111,7 +111,7 @@ public static class EpochConverter
 
         if (!match.Success || !long.TryParse(numberValuePart1, NumberStyles.Integer, CultureInfo.InvariantCulture, out long unixTime))
         {
-            throw new Exception("Unexpected value format, unable to parse DateTime.");
+            throw new Exception("Unexpected value format, unable to parse date value.");
         }
 
         return unixTime;
@@ -122,13 +122,13 @@ public static class EpochConverter
         return Convert.ToInt64((dateTime - EpochStart).TotalMilliseconds);
     }
 
-    public static JsonSerializerOptions Options  => new JsonSerializerOptions
-                                                                      {
-                                                                          Converters =
-                                                                          {
-                                                                              new JsonDateTimeConverter(),
-                                                                              new JsonDateTimeOffsetConverter(),
-                                                                              new JsonNullableDateTimeConverter()
-                                                                          }
-                                                                      };
+    public static JsonSerializerOptions Options  => new()
+                                                    {
+                                                          Converters =
+                                                          {
+                                                              new JsonDateTimeConverter(),
+                                                              new JsonDateTimeOffsetConverter(),
+                                                              new JsonNullableDateTimeConverter()
+                                                          }
+                                                      };
 }
