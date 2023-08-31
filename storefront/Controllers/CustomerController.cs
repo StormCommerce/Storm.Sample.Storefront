@@ -24,11 +24,6 @@ namespace Storefront.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         public ActionResult Login()
         {
