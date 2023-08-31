@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Integration.Storm.Model.Customer
+﻿namespace Integration.Storm.Model.Customer
 {
     public class StormCustomer
     {

@@ -1,9 +1,4 @@
 ﻿using Integration.Storm.Model.Customer;
-using Model.Commerce.Customer;
-using Model.Commerce.Shopping;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Integration.Storm.Model.Shopping
 {

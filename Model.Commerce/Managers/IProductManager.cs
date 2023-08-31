@@ -1,9 +1,9 @@
 ﻿using Model.Commerce.Customer;
 using Model.Commerce.Product;
 using Model.Commerce.Product.InputModel;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend
@@ -15,11 +15,11 @@ namespace Model.Commerce.Managers
     public interface IProductManager
     {
 
-        IProductList FindByCategory(IUser currentUser, IProductListInputModel query);
-        IProduct FindByPartNo(IUser currentUser, string partNo);
-        IProduct FindByUrl(IUser currentUser, string url);
-        IProductList Query(IUser currentUser, string query);
-        IList<IProductFilter> FindAllFilters(IUser currentUser, IProductListInputModel query);
+        Task<IProductList> FindByCategory(IUser currentUser, IProductListInputModel query);
+        Task<IProduct> FindByPartNo(IUser currentUser, string partNo);
+        Task<IProduct> FindByUrl(IUser currentUser, string url);
+        Task<IProductList> Query(IUser currentUser, string query);
+        Task<IList<IProductFilter>> FindAllFilters(IUser currentUser, IProductListInputModel query);
 
     }
 }

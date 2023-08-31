@@ -9,7 +9,8 @@
                         <i class="material-icons icon">email</i>
                         <label class="sr-only" for="login-email">Email</label>
                         <input id="login-email" name="username" type="email" class="form-control login-email" placeholder="Email">
-                    </div><!--//form-group-->
+                    </div>
+                    <!--form-group-->
                     <div class="form-group">
                         <i class="material-icons icon">lock</i>
                         <label class="sr-only" for="login-password">Password</label>
@@ -21,13 +22,12 @@
                                     <input class="icheck" type="checkbox"> Remember me
                                 </label>
                             </div>
-                        </div><!--/extra-->
-                    </div><!--/form-group-->
+                        </div>
+                    </div>
+                    <!--form-group-->
                     <button type="button" class="btn btn-lg btn-block btn-primary" onclick="login(getElementById('login-email').value, getElementById('login-password').value)">Log in</button>
                 </form>
-                
                 <div>New customer? <a href="#">Register here</a></div>
-
             </div>
         </div>
     </div>
@@ -35,9 +35,7 @@
 <!--page end-->
 
 @section scripts  {
-
-
-    <script language="JavaScript">
+    <script type="JavaScript">
         function login(user, password) {
             axios.post("/Customer/Login", { Username: user, Password: password })
                 .then(response => { location.href = '/'; })
@@ -46,5 +44,4 @@
                 });
         }
     </script>
-
 }

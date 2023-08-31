@@ -1,9 +1,7 @@
 ﻿using Model.Commerce.Customer;
 using Model.Commerce.Dto.Customer;
 using Model.Commerce.Shopping;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Model.Commerce.Dto.Shopping
 {

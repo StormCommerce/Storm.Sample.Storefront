@@ -4,7 +4,6 @@ using Model.Commerce.Dto.Shopping;
 using Model.Commerce.Shopping;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Integration.Storm.Builder
 {

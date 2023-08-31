@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Model.Commerce.Product
+﻿namespace Model.Commerce.Product
 {
     public enum ValueType
     {

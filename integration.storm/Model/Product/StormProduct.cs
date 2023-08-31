@@ -1,7 +1,6 @@
 ﻿using Integration.Storm.Model.Product.Category;
 using System;
-using System.Collections.Generic;
-using System.Text;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend

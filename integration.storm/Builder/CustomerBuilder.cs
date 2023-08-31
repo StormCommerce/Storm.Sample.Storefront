@@ -1,8 +1,5 @@
 ﻿using Integration.Storm.Model.Customer;
 using Model.Commerce.Dto.Customer;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Integration.Storm.Builder
 {
