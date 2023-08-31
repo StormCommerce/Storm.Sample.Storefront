@@ -4,13 +4,12 @@ using Integration.Storm.Model.Shopping;
 using Microsoft.Extensions.Configuration;
 using Model.Commerce.Customer;
 using Model.Commerce.Dto.Customer;
-using Model.Commerce.Dto.Product;
 using Model.Commerce.Dto.Shopping;
 using Model.Commerce.Managers;
 using Model.Commerce.Shopping;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend
@@ -34,7 +33,7 @@ namespace Integration.Storm.Managers
             _formCheckoutProvider = checkoutProvider;
         }
 
-        public ICheckout GetCheckout(IUser currentUser, string basketExternalId)
+        public async Task<ICheckout> GetCheckout(IUser currentUser, string basketExternalId)
         {
 
             string pricelistseed = string.Empty;
@@ -46,7 +45,7 @@ namespace Integration.Storm.Managers
             url += $"&basketId={basketExternalId}";
             url += addUserUrlDetails(currentUser);
 
-            var stormCheckout = _stormConnectionManager.GetResult<StormCheckout>(url);
+            var stormCheckout = await _stormConnectionManager.GetResult<StormCheckout>(url);
 
             if (stormCheckout == null) return null;
 
@@ -58,20 +57,20 @@ namespace Integration.Storm.Managers
             {
                 if( checkout.PaymentMethod == null )
                 {
-                    return SetPaymentMethod(currentUser, basketExternalId, defaultPaymentMethod);
+                    return await SetPaymentMethod(currentUser, basketExternalId, defaultPaymentMethod);
                 }
             }
 
             return checkout;
         }
 
-        public ICheckout SetDeliveryMethod(IUser currentUser, string basketExternalId, string deliveryMethodId )
+        public async Task<ICheckout> SetDeliveryMethod(IUser currentUser, string basketExternalId, string deliveryMethodId )
         {
             string url = $"ShoppingService.svc/rest/UpdateDeliveryMethod?format=json";
             url += $"&basketId={basketExternalId}";
             url += $"&deliveryMethodId={deliveryMethodId}";
             url += addUserUrlDetails(currentUser);
-            var stormCheckout = _stormConnectionManager.PostResult<StormCheckout>(url);
+            var stormCheckout = await _stormConnectionManager.PostResult<StormCheckout>(url);
 
             if (stormCheckout == null) return null;
             var checkout = StormCheckoutToCheckoutDto(stormCheckout);
@@ -79,13 +78,13 @@ namespace Integration.Storm.Managers
             return checkout;
         }
 
-        public ICheckout SetPaymentMethod(IUser currentUser, string basketExternalId, string paymentMethodId)
+        public async Task<ICheckout> SetPaymentMethod(IUser currentUser, string basketExternalId, string paymentMethodId)
         {
             string url = $"ShoppingService.svc/rest/UpdatePaymentMethod?format=json";
             url += $"&basketId={basketExternalId}";
             url += $"&paymentMethodId={paymentMethodId}";
             url += addUserUrlDetails(currentUser);
-            var stormCheckout = _stormConnectionManager.PostResult<StormCheckout>(url);
+            var stormCheckout = await _stormConnectionManager.PostResult<StormCheckout>(url);
 
             if (stormCheckout == null) return null;
             var checkout = StormCheckoutToCheckoutDto(stormCheckout);
@@ -94,22 +93,20 @@ namespace Integration.Storm.Managers
         }
 
 
-        public IPaymentResponse PaymentForm(IUser currentUser, string basketId)
+        public async Task<IPaymentResponse> PaymentForm(IUser currentUser, string basketId)
         {
-            return _formCheckoutProvider.PaymentForm(currentUser, basketId);
+            return await _formCheckoutProvider.PaymentForm(currentUser, basketId);
         }
-        public IPaymentResponse PaymentComplete(string reference)
+        public async Task<IPaymentResponse> PaymentComplete(string reference)
         {
-            return _formCheckoutProvider.PaymentComplete(reference);
+            return await _formCheckoutProvider.PaymentComplete(reference);
         }
-
 
         private CustomerDto CustomerToDto(StormCustomer stormCustomer)
         {
             CustomerBuilder builder = new CustomerBuilder();
             return builder.Build(stormCustomer);
         }
-
 
         private BasketDto BasketToDto(StormBasket stormBasket)
         {

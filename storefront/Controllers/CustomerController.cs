@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Model.Commerce.Customer;
@@ -31,9 +28,9 @@ namespace Storefront.Controllers
         }
 
         [HttpPost]
-        public JsonResult Login([FromBody]LoginInputModel loginInputModel)
+        public async Task<JsonResult> Login([FromBody]LoginInputModel loginInputModel)
         {
-            IUser user = _accountManager.Login(loginInputModel.Username, loginInputModel.Password);
+            IUser user = await _accountManager.Login(loginInputModel.Username, loginInputModel.Password);
 
             if( user == null )
             {

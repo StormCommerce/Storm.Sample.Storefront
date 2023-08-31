@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend

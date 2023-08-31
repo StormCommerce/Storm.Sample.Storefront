@@ -5,7 +5,7 @@ using Model.Commerce.Managers;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Integration.Storm.Managers
 {
@@ -18,14 +18,14 @@ namespace Integration.Storm.Managers
             _stormConnectionManager = stormConnectionManager;
         }
 
-        public IUser Login(string username, string password)
+        public async Task<IUser> Login(string username, string password)
         {
 
             string u = WebUtility.UrlEncode(username);
             string p = WebUtility.UrlEncode(password);
 
             string url = $"CustomerService.svc/rest/Login?loginName={username}&password={password}";
-            var user = _stormConnectionManager.GetResult<StormCustomer>(url);
+            var user = await _stormConnectionManager.GetResult<StormCustomer>(url);
 
             if (user == null || user.Id == 0) return null;
 
@@ -55,7 +55,7 @@ namespace Integration.Storm.Managers
             return dto;
         }
 
-        public IUser FindById(string id)
+        public Task<IUser> FindById(string id)
         {
             throw new NotImplementedException();
         }

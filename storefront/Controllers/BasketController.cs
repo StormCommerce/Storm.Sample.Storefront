@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Model.Commerce.Dto.Shopping;
 using Model.Commerce.Managers;
@@ -34,19 +31,19 @@ namespace Storefront.Controllers
             return View(GetCurrentBasket());
         }
 
-        public ActionResult Checkout()
+        public async Task<ActionResult> Checkout()
         {
-            var checkout = _checkoutManager.GetCheckout(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId);
-            var paymentForm = _checkoutManager.PaymentForm(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId);
+            var checkout = await _checkoutManager.GetCheckout(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId);
+            var paymentForm = await  _checkoutManager.PaymentForm(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId);
 
             _sessionModel.CurrentCheckoutId = paymentForm.Reference;
 
             return View(paymentForm);
         }
 
-        public ActionResult OrderComplete()
+        public async Task<ActionResult> OrderComplete()
         {
-            var paymentForm = _checkoutManager.PaymentComplete(_sessionModel.CurrentCheckoutId);
+            var paymentForm = await _checkoutManager.PaymentComplete(_sessionModel.CurrentCheckoutId);
 
             _sessionModel.CurrentCheckoutId = null;
             _sessionModel.CurrentBasketId = null;
@@ -55,22 +52,22 @@ namespace Storefront.Controllers
         }
 
 
-        public JsonResult CheckoutJson()
+        public async Task<JsonResult> CheckoutJson()
         {
-            var checkout = _checkoutManager.GetCheckout(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId);
+            var checkout = await _checkoutManager.GetCheckout(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId);
 
             return Json(checkout);
         }
 
-        public JsonResult SetDeliveryMethod(string deliveryMethodId)
+        public async Task<JsonResult> SetDeliveryMethod(string deliveryMethodId)
         {
-            var checkout = _checkoutManager.SetDeliveryMethod(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId, deliveryMethodId);
+            var checkout = await _checkoutManager.SetDeliveryMethod(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId, deliveryMethodId);
             return Json(checkout);
         }
 
-        public JsonResult PaymentForm()
+        public async Task<JsonResult> PaymentForm()
         {
-            return Json(_checkoutManager.PaymentForm(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId));
+            return Json(await _checkoutManager.PaymentForm(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId));
         }
 
         public JsonResult Minicart()
@@ -78,7 +75,7 @@ namespace Storefront.Controllers
             return Json(GetCurrentBasket());
         }
 
-        private BasketDto GetCurrentBasket()
+        private async Task<BasketDto> GetCurrentBasket()
         {
             var basketId = _sessionModel.CurrentBasketId;
             if (basketId == null)
@@ -86,7 +83,7 @@ namespace Storefront.Controllers
                 return new BasketDto();
             }
 
-            var basket = _basketManager.FindBasketById(_sessionModel.CurrentUser, basketId);
+            var basket = await _basketManager.FindBasketById(_sessionModel.CurrentUser, basketId);
             if (basket == null)
             {
                 _sessionModel.CurrentBasketId = null;
@@ -96,38 +93,38 @@ namespace Storefront.Controllers
             return (BasketDto)basket;
         }
 
-        public JsonResult AddToCart(string partNo, int quantity)
+        public async Task<JsonResult> AddToCart(string partNo, int quantity)
         {
-            var currentBasket = GetCurrentBasket();
+            var currentBasket = await GetCurrentBasket();
             if( string.IsNullOrEmpty(currentBasket.ExternalId))
             {
-                currentBasket = (BasketDto)_basketManager.CreateBasket(_sessionModel.CurrentUser);
+                currentBasket = (BasketDto)(await _basketManager.CreateBasket(_sessionModel.CurrentUser));
                 _sessionModel.CurrentBasketId = currentBasket.ExternalId;
             }
 
-            currentBasket = (BasketDto)_basketManager.AddItem(_sessionModel.CurrentUser, currentBasket.ExternalId, partNo, quantity);
+            currentBasket = (BasketDto) (await _basketManager.AddItem(_sessionModel.CurrentUser, currentBasket.ExternalId, partNo, quantity));
 
             return Json(currentBasket);
         }
 
-        public JsonResult UpdateCart(string partNo, int quantity)
+        public async Task<JsonResult> UpdateCart(string partNo, int quantity)
         {
-            var currentBasket = GetCurrentBasket();
+            var currentBasket = await GetCurrentBasket();
             if (!string.IsNullOrEmpty(currentBasket.ExternalId))
             {
-                var basket = _basketManager.UpdateItem(_sessionModel.CurrentUser, currentBasket.ExternalId, partNo, quantity);
+                var basket = await _basketManager.UpdateItem(_sessionModel.CurrentUser, currentBasket.ExternalId, partNo, quantity);
                 return Json(basket);
             }
 
             return Json(currentBasket);
         }
 
-        public JsonResult RemoveFromCart(string partNo)
+        public async Task<JsonResult> RemoveFromCart(string partNo)
         {
-            var currentBasket = GetCurrentBasket();
+            var currentBasket = await GetCurrentBasket();
             if (!string.IsNullOrEmpty(currentBasket.ExternalId))
             {
-                var basket = _basketManager.UpdateItem(_sessionModel.CurrentUser, currentBasket.ExternalId, partNo, 0);
+                var basket = await _basketManager.UpdateItem(_sessionModel.CurrentUser, currentBasket.ExternalId, partNo, 0);
                 return Json(basket);
             }
 

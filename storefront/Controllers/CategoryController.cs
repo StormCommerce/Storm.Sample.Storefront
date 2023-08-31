@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Model.Commerce.Managers;
 using Storefront.Models;
@@ -25,17 +21,17 @@ namespace Storefront.Controllers
         }
 
         // Sample page for Categories
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var allCategories = _categoryManager.FindAll(_sessionModel.CurrentUser);
+            var allCategories = await _categoryManager.FindAll(_sessionModel.CurrentUser);
 
             return View(allCategories);
         }
 
         [HttpGet]
-        public JsonResult AllCategories()
+        public async Task<JsonResult> AllCategories()
         {
-            var allCategories = _categoryManager.FindAll(_sessionModel.CurrentUser);
+            var allCategories = await _categoryManager.FindAll(_sessionModel.CurrentUser);
 
             return Json(allCategories);
         }

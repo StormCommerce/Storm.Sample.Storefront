@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Integration.Storm.Model.Product
+﻿namespace Integration.Storm.Model.Product
 {
     public class StormParametricInfo
     {    

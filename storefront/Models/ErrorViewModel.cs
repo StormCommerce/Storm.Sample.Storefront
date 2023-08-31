@@ -1,5 +1,3 @@
-using System;
-
 namespace storefront.Models
 {
     public class ErrorViewModel

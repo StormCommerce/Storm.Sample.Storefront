@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Model.Commerce.Customer;
 using Model.Commerce.Dto.Customer;
-using Model.Commerce.Dto.Shopping;
-using Model.Commerce.Managers;
-using Model.Commerce.Shopping;
 using Newtonsoft.Json;
 
 /******************************************************************************

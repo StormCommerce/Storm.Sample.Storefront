@@ -1,9 +1,7 @@
 ﻿using Model.Commerce.Dto.Product;
 using Model.Commerce.Product;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Text;
+
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
  ** Purpose: Sample code for how to build an integration from a frontend
@@ -31,16 +29,16 @@ namespace Integration.Storm.Model.Product.Category
         public CategoryDto ToDto()
         {
             CategoryDto dto = new CategoryDto();
-            dto.Code = this.Code;
-            dto.Name = this.Name;
-            dto.ExternalId = this.CategoryId.ToString();
-            dto.ParentId = this.ParentId?.ToString();
-            dto.Level = this.Level;
+            dto.Code = Code;
+            dto.Name = Name;
+            dto.ExternalId = CategoryId.ToString();
+            dto.ParentId = ParentId?.ToString();
+            dto.Level = Level;
             
-            if( this.Children != null )
+            if( Children != null )
             {
                 dto.Children = new List<ICategory>();
-                foreach( var child in this.Children )
+                foreach( var child in Children )
                 {
                     dto.Children.Add(child.ToDto());
                 }
