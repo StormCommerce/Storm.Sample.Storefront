@@ -22,7 +22,7 @@ namespace Integration.Storm.Managers
             Cache = cache;
         }
 
-        public async Task<string> GetUncachedAccessToken(string oauthClientId, string oauthClientSecret, string environment)
+        public async Task<string> GetUncachedAccessToken(string identityUrl, string oauthClientId, string oauthClientSecret, string environment)
         {
             var auth = Cache.Get<Auth>("accessTokenKey");
             if (auth is null)
@@ -32,7 +32,7 @@ namespace Integration.Storm.Managers
                 var requestBody = $"client_id={oauthClientId}&client_secret={oauthClientSecret}&grant_type=client_credentials&scope={environment}";
                 var tokenRequest = new HttpRequestMessage
                                    {
-                                       RequestUri = new Uri("https://identity.storm.io/1.0/connect/token"),
+                                       RequestUri = new Uri($"{identityUrl}connect/token"),
                                        Content = new StringContent(requestBody,
                                            Encoding.UTF8,
                                            "application/x-www-form-urlencoded"),
@@ -67,6 +67,7 @@ namespace Integration.Storm.Managers
         IConfiguration _configuration;
         private string AppId;
         private string StormBaseUrl;
+        private string IdentityBaseUrl;
         private string OauthClientId;
         private string OauthClientSecret;
         private string Environment;
@@ -77,6 +78,7 @@ namespace Integration.Storm.Managers
         public NorceConnectionManager(IConfiguration configuration, IMemoryCache cache)
         {
             AppId = configuration["Storm:ApplicationId"];
+            IdentityBaseUrl = configuration["Storm:IdentityUrl"];
             OauthClientId = configuration["Storm:OauthClientId"];
             OauthClientSecret = configuration["Storm:OauthClientSecret"];
             Environment = configuration["Storm:Environment"];
@@ -87,7 +89,7 @@ namespace Integration.Storm.Managers
 
         private async Task<TR> SendRequest<TR>(HttpRequestMessage request)
         {
-            var accessToken = await _authentication.GetUncachedAccessToken(OauthClientId,OauthClientSecret,Environment);
+            var accessToken = await _authentication.GetUncachedAccessToken(IdentityBaseUrl, OauthClientId, OauthClientSecret, Environment);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             request.Headers.Add("applicationId", AppId);
 
