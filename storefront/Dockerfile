@@ -1,9 +1,10 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-bookworm-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
+FROM pull mcr.microsoft.com/dotnet/sdk:7.0 AS build
+
 WORKDIR /src
 COPY ["storefront/storefront.csproj", "storefront/"]
 RUN dotnet restore "storefront/storefront.csproj"
@@ -17,4 +18,5 @@ RUN dotnet publish "storefront.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "storefront.dll"]
