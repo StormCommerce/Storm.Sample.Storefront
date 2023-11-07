@@ -19,4 +19,7 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+ENV TZ=Europe/Stockholm
+ENV ASPNETCORE_URLS=http://+:1800
+
 ENTRYPOINT ["dotnet", "storefront.dll"]

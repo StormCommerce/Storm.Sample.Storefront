@@ -1,0 +1,149 @@
+trigger:
+  branches:
+    include:
+      - master
+      - '*'
+  paths:
+    exclude:
+      - '.ci'
+
+variables:
+- group: common-deployment
+- name: solution
+  value: '**/*.sln'
+- name: namespace
+  value: commerce
+- name: applicationName
+  value: sample-storefront
+- name: dockerfile
+  value: '**/storefront/Dockerfile'
+- name: isMain
+  value: $[eq(variables['Build.SourceBranchName'], 'master')]
+- name: disable.coverage.autogenerate
+  value: 'true'
+- name: containerRegistry
+  value: crnorce
+- name: nugetfile
+  value: './.nuget/NuGet.Config'
+- name: buildConfiguration
+  value: 'Release'
+
+pool:
+  name: vmss-ubuntu
+
+resources:
+  repositories:
+  - repository: templates
+    type: github
+    endpoint: Commerce #ServiceConnection name
+    name: NorceTech/azure-devops-templates
+    
+stages:
+- stage: msbuild
+  jobs:
+  - job: build
+    steps:
+    
+    - task: NuGetToolInstaller@1 # Ensure nuget is installed
+      displayName: Nuget Tool Install
+
+    - task: AzureKeyVault@2
+      inputs:
+        azureSubscription: 'keyvault-devops' 
+        KeyVaultName: 'kv-norce-devops'
+        SecretsFilter: 'storm-nuget-pat'
+        RunAsPreJob: false
+
+    - task: NuGetCommand@2
+      displayName: "Authenticate to Nuget Feed - StormPackageFeed"
+      inputs:
+        command: "custom"
+        arguments: 'sources Update -Name "StormPackageFeed" -username any -password $(storm-nuget-pat) -ConfigFile $(nugetfile) -StorePasswordInClearText'
+
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore'
+      inputs:
+        command: 'restore'
+        restoreSolution: '$(solution)'
+        selectOrConfig: 'config'
+        nugetConfigPath: $(nugetfile)
+
+    - task: DotNetCoreCLI@2
+      displayName: Build Project
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: Package
+      inputs:
+        command: publish
+        publishWebProjects: True
+        zipAfterPublish: false
+        arguments: '--output ./build_results/'
+
+    - task: PublishBuildArtifacts@1
+      displayName: Publish ChannelService
+      inputs:
+        pathtoPublish: './build_results/Storm.ChannelService.API'
+        artifactName: 'ChannelService'
+
+- stage: build  
+  jobs:
+  - template: templates/jobs/job-build-then-push-docker.yaml@templates 
+    parameters:
+      repository: '$(namespace)/$(applicationName)'
+      containerRegistry: '$(containerRegistry)'
+      dockerfile: $(dockerfile)
+      buildContext: '**/..'
+      buildArgs: '--build-arg ARTIFACTSDIR=$(Build.ArtifactStagingDirectory)'
+      nugetfile: $(nugetfile)
+
+- stage: deploy_feature_branch
+  dependsOn: build
+  condition: and(succeeded(), eq(variables.isMain, false), ne(variables['Build.Reason'], 'PullRequest'))
+  jobs:
+  - template: templates/jobs/job-update-git-configuration-repo-branch.yaml@templates
+    parameters:
+      environment: test
+      applicationName: $(applicationName)
+      team: $(namespace)
+  - job: sync_app_of_apps
+    dependsOn: update_configuration_repo
+    steps:
+    - template: templates/steps/argocd-sync.yaml@templates
+      parameters:
+        password: $(ARGOCD_PASSWORD)
+        server: $(ARGOCD_SERVER)
+        application: $(namespace)-apps
+        wait_args: '--operation'
+  - job: sync_in_argocd
+    dependsOn: sync_app_of_apps
+    steps:
+    - template: templates/steps/get-branch-name.yaml@templates
+    - template: templates/steps/argocd-sync.yaml@templates
+      parameters:
+        password: $(ARGOCD_PASSWORD)
+        server: $(ARGOCD_SERVER)
+        application: $(applicationName)-$(branchName)
+        timeout: '240'
+
+- stage: deploy_to_test
+  dependsOn: build
+  condition: and(succeeded(), eq(variables.isMain, true))
+  jobs:
+  - template: templates/jobs/job-update-git-configuration-repo.yaml@templates
+    parameters:
+      environment: test
+      applicationName: $(applicationName)
+      team: $(namespace)
+  - job: sync_in_argocd
+    dependsOn: update_configuration_repo
+    steps:
+    - template: templates/steps/argocd-sync.yaml@templates
+      parameters:
+        password: $(ARGOCD_PASSWORD)
+        server: $(ARGOCD_SERVER)
+        application: $(applicationName)-test
+        
