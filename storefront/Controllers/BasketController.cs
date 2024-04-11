@@ -70,9 +70,10 @@ namespace Storefront.Controllers
             return Json(await _checkoutManager.PaymentForm(_sessionModel.CurrentUser, _sessionModel.CurrentBasketId));
         }
 
-        public JsonResult Minicart()
+        public async Task<JsonResult> Minicart()
         {
-            return Json(GetCurrentBasket());
+            var basket = await GetCurrentBasket();
+            return Json(basket);
         }
 
         private async Task<BasketDto> GetCurrentBasket()

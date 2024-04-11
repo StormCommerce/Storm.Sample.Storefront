@@ -8,6 +8,7 @@ using Model.Commerce.Shopping;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Integration.Storm.Exceptions;
 
 /******************************************************************************
  ** Author: Fredrik Gustavsson, Jolix AB, www.jolix.se
@@ -99,11 +100,17 @@ namespace Integration.Storm.Managers
             {
                 pricelistseed = string.Join(",", currentUser.PriceLists);
             }
-
-
             string url = $"ShoppingService.svc/rest/GetBasket?id={externalId}&cultureCode={currentUser.LanguageCode}&currencyId={currentUser.CurrencyCode}&pricelistSeed={pricelistseed}";
 
-            var stormBasket = await _stormConnectionManager.GetResult<StormBasket>(url);
+            StormBasket stormBasket = null;
+            try
+            {
+                stormBasket = await _stormConnectionManager.GetResult<StormBasket>(url);
+            }
+            catch (RecordNotFoundException e)
+            {
+                // If we logged things we could log here that didn't find any basket with that id
+            }
 
             if (stormBasket == null) return null;
             if (!stormBasket.IsBuyable) return null;

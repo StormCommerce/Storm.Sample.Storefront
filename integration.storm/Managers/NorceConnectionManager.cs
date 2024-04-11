@@ -94,7 +94,7 @@ namespace Integration.Storm.Managers
             request.Headers.Add("applicationId", AppId);
 
             var response = await httpClient.SendAsync(request);
-            var result = response.Content.ReadAsStringAsync();
+            var result = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
             {
                 if ((int)response.StatusCode >= 400 && (int)response.StatusCode <= 499)
@@ -110,7 +110,11 @@ namespace Integration.Storm.Managers
                 throw new Exception("Invalid request status " + (int)response.StatusCode + ", reason=" + response.ReasonPhrase);
             }
 
-            var r = JsonSerializer.Deserialize<TR>(result.Result, EpochConverter.Options);
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                throw new RecordNotFoundException(404, "No data");
+            }
+            var r = JsonSerializer.Deserialize<TR>(result, EpochConverter.Options);
             return r;
         }
 
